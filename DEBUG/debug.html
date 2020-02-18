@@ -1,0 +1,87 @@
+<div id="DEBUG_DIV" class="noSelect hidden">
+	<!-- DEBUG NAVIGATION -->
+	<div id="DEBUG_DIV_MENU">
+		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_0',this);">START</div>
+		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_1',this);">CORE</div>
+		<div class="debugPanelButtons active" onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_2',this);">LAYERS</div>
+
+		<div id="debug_updateIndicator">!</div>
+	</div>
+
+	<div id="DEBUG_performance_table1">
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+	</div>
+
+	<table class="debugTable1">
+		<!-- <caption>AVG TIMINGS</caption> -->
+		<!-- <thead>
+			<tr>
+				<th>LOGIC</th>
+				<th>BG</th>
+				<th>SPR</th>
+				<th>TXT</th>
+				<th>FADE</th>
+				<th>OUT</th>
+				<th>*TOTAL*</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td> <span id="avg_LOGIC" >-0.00%</span> </td>
+				<td> <span id="avg_BG"    >-0.00%</span> </td>
+				<td> <span id="avg_SPRITE">-0.00%</span> </td>
+				<td> <span id="avg_TEXT"  >-0.00%</span> </td>
+				<td> <span id="avg_FADE"  >-0.00%</span> </td>
+				<td> <span id="avg_OUTPUT">-0.00%</span> </td>
+				<td> <span id="avg_TOTAL" >-0.00%</span> </td>
+			</tr>
+		</tbody> -->
+	</table>
+
+	<!-- <br> -->
+
+	<div id="DEBUG_DIV_MENU_DIVS">
+		<!-- START -->
+		<div id="DEBUG_MENU_DIV_0" class="DEBUG_DIV_MENU_DIVS">
+			<br>START<br>
+			Click one of the tabs here to see more data.
+		</div>
+
+		<!-- CORE -->
+		<div id="DEBUG_MENU_DIV_1" class="DEBUG_DIV_MENU_DIVS">
+			<br>CORE<br>
+
+			<div id="DEBUG_setToUpdate">
+			</div>
+
+			<!-- <br> -->
+
+			<div id="DEBUG_forceRedraws">
+			</div>
+
+			<div id="DEBUG_misc">
+				<button onclick="_CGF.ClearSprites();"    >ClearSprites()</button>
+				<button onclick="_CGF.ClearVram();"       >ClearVram()</button>
+				<button onclick="_CGF.clearAllCanvases();">clearAllCanvases()</button>
+			</div>
+
+		</div>
+
+		<!-- LAYERS -->
+		<div id="DEBUG_MENU_DIV_2" class="DEBUG_DIV_MENU_DIVS active">
+			<br>LAYERS<br>
+
+			<div id="DEBUG_LAYERS_table1" init="false">
+			</div>
+
+		</div>
+
+		<!-- DEBUG_performance_table -->
+	</div>
+
+</div>

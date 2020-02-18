@@ -1,0 +1,97 @@
+{
+	"custom_videokernel" : false,
+	"custom_soundkernel" : false,
+	"videokernel"       : "cores/videoMode_C/videoMode_C.js",
+	"soundkernel"       : "cores/soundMode_A/soundMode_A.js",
+
+	"js_files": [
+		"js/gs_MAIN.js" ,
+		"js/gs_TEMPLATE.js"
+	],
+
+	"debug_files": [
+		"DEBUG/debug.css",
+		"DEBUG/debug.js",
+		"DEBUG/debug.html"
+	],
+
+	"links":[
+		{ "text":"Instructions", "href":"links/instructions.txt"                     , "target":"_blank" },
+		{ "text":"Credits"     , "href":"links/credits.txt"                          , "target":"_blank" },
+		{ "text":"Github"      , "href":"https://github.com/nicksen782/JSGAME_videoModeC_TESTS", "target":"_blank" }
+	],
+
+	"mp3_files": [
+		{ "key":"tick"     , "fileurl":"snd/tick.mp3"     , "type":"mp3_sfx", "names":["cursorTick1"] }
+	],
+
+	"midi_bin": "UAM/MUSIC/videoModeC_TESTS_midi.bin",
+
+	"midi_synths": {
+		"BGM1" : {
+			"synthOptions": { "quality":0 , "useReverb":false, "voices":16 },
+			"options"     : { "loop":false, "masterVol":"" },
+			"used":true
+		} ,
+		"BGM2" : {
+			"synthOptions": { "quality":1 , "useReverb":false, "voices":16 },
+			"options"     : { "loop":false, "masterVol":"" },
+			"used":false
+		} ,
+		"SFX1" : {
+			"synthOptions": { "quality":0 , "useReverb":false, "voices":16 },
+			"options"     : { "loop":false, "masterVol":"" },
+			"used":false
+		} ,
+		"SFX2" : {
+			"synthOptions": { "quality":0 , "useReverb":false, "voices":16 },
+			"options"     : { "loop":false, "masterVol":"" },
+			"used":false
+		} ,
+		"SFX3" : {
+			"synthOptions": { "quality":0 , "useReverb":false, "voices":16 },
+			"options"     : { "loop":false, "masterVol":"" },
+			"used":false
+		} ,
+		"SFX4" : {
+			"synthOptions": { "quality":0 , "useReverb":false, "voices":16 },
+			"options"     : { "loop":false, "masterVol":"" },
+			"used":false
+		}
+	},
+
+	"typeGamepads"      : "nes" ,
+	"numGamepads"       : 1     ,
+
+	"graphics":{
+		"core":{
+			"TRANSLUCENT_COLOR" : "0xF2",
+			"TILE_WIDTH"        : 8     ,
+			"TILE_HEIGHT"       : 8     ,
+			"VRAM_TILES_H"      : 32    ,
+			"VRAM_TILES_V"      : 32    ,
+			"INTRO_LOGO"        : 1     ,
+			"FPS"               : 30    ,
+			"SCALE"             : 2.4
+		},
+
+		"inputTilesetData" : [
+			"UAM/PROGMEM/tiles.min.inc"
+		],
+		"tilesets":[
+			{"tileset":"tilesBG1", "convertTransparent":false },
+			{"tileset":"tilesTX1", "convertTransparent":true  },
+			{"tileset":"tilesSP1", "convertTransparent":true  }
+		],
+
+		"layers" : {
+			"BG1"  : { "clearWith":"black"      , "alpha":true, "clearBeforeDraw":false , "type":"VRAM"   },
+			"BG2"  : { "clearWith":"transparent", "alpha":true, "clearBeforeDraw":false , "type":"VRAM"   },
+			"TEXT" : { "clearWith":"transparent", "alpha":true, "clearBeforeDraw":false , "type":"VRAM"   },
+			"SP1"  : { "clearWith":"transparent", "alpha":true, "clearBeforeDraw":true , "type":"SPRITE" }
+		},
+		"layerDrawOrder": [ "BG1", "BG2", "TEXT", "SP1" ]
+	},
+
+	"ENDOFFILE" : ""
+}

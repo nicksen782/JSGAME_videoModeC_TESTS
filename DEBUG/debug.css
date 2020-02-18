@@ -1,0 +1,112 @@
+/* ************************** */
+/* Affects the game debug DOM */
+/* ************************** */
+
+/* The main debug div */
+#DEBUG_DIV {
+	vertical-align: top;
+	width: 500px;
+	height: 750px;
+	text-align: left;
+	overflow: auto;
+}
+#DEBUG_DIV.hidden {
+	display:none;
+}
+
+#DEBUG_DIV.notActive{
+	opacity:0.50;
+}
+
+#DEBUG_DIV #DEBUG_DIV_MENU {
+	text-align: center;
+}
+#DEBUG_DIV .debugPanelButtons {
+	display: inline-block;
+	width: 85px;
+	margin: 2px;
+	background-color: deepskyblue;
+	border-radius: 5px;
+	padding: 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	font-size: 12px;
+}
+#DEBUG_DIV .debugPanelButtons:hover { background-color:blue;}
+#DEBUG_DIV .debugPanelButtons:active{ background-color:skyblue;}
+#DEBUG_DIV .debugPanelButtons.active{ background-color:greenyellow;}
+#DEBUG_DIV #DEBUG_DIV_MENU_DIVS .DEBUG_DIV_MENU_DIVS{
+	display:none;
+}
+#DEBUG_DIV #DEBUG_DIV_MENU_DIVS .DEBUG_DIV_MENU_DIVS.active{
+	display:block;
+}
+
+/* debug div tables */
+#DEBUG_DIV .debugTable1{width: 100%;border-collapse: collapse;border-top: 2px dotted black;border-bottom: 2px dotted black;background-color: darkgray;}
+#DEBUG_DIV .debugTable1 caption{width:100%;font-weight:bold;background-color: gray;}
+#DEBUG_DIV .debugTable1 th{ text-decoration:underline; font-weight:bold; text-align:center; }
+#DEBUG_DIV .debugTable1 td{ text-align:center; }
+
+/* #DEBUG_DIV .debugTable2{width:100%;border-collapse: collapse;} */
+/* #DEBUG_DIV .debugTable2 caption{width:100%;} */
+/* #DEBUG_DIV .debugTable2 th{ text-decoration:underline; font-weight:bold; text-align:left; } */
+/* #DEBUG_DIV .debugTable2 td:nth-child(1){width:25%;text-align:left;vertical-align: top;} */
+/* #DEBUG_DIV .debugTable2 td:nth-child(2){ width:75%; text-align:left; } */
+
+/* debug div - individual elements */
+#DEBUG_DIV #DEBUG_DIV_MENU_DIVS .DEBUG_DIV_MENU_DIVS.active button{
+	font-size: 12px;
+	margin:2px;
+	padding:2px;
+}
+
+/* ------------------------- */
+
+.DEBUG_layerDataInfo_div_cont   {text-align: center; white-space:pre;}
+.DEBUG_layerDataInfo_span_label {width: 25%;display: inline-block;white-space:pre;text-align: left;font-family: monospace;font-size: 10px;}
+.DEBUG_layerDataInfo_span_data1 {width: 20%;display: inline-block;white-space:pre;font-family: monospace;text-align: left;font-size: 10px;}
+.DEBUG_layerDataInfo_span_data2 {width: 55%;display: inline-block;white-space:pre;font-family: monospace;text-align: left;font-size: 10px;}
+
+#DEBUG_DIV span.widespan1{/* background-color: gray; */width: 150px;display: inline-block;}
+
+#DEBUG_DIV #DEBUG_performance_table1 {
+	background-color: lightgray;
+}
+#DEBUG_DIV .DEBUG_canvas {
+	border:1px dashed black;
+	width: 80%;
+	height: 80%;
+}
+
+#DEBUG_DIV #debug_updateIndicator{
+	position:absolute;
+	top:0px;
+	right:0px;
+	width: 10px;
+	height: 20px;
+	background-color: lightgray;
+	font-size: 12px;
+	line-height: 20px;
+	font-weight: bold;
+}
+#DEBUG_DIV .layerDiv2 {
+    border: 1px solid black;
+    vertical-align: top;
+    display: inline-block;
+    width: 230px;
+    height: 230px;
+    padding: 2px;
+    margin: 2px;
+    text-align: center;
+}
+#DEBUG_DIV .layerDiv3 {
+    /* border: 1px solid black;
+    vertical-align: top;
+    display: inline-block;
+    width: 180px;
+    height: 180px;
+    padding: 2px;
+    margin: 2px;
+    text-align: center; */
+}

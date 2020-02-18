@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<gfx-xform version="SINGLE_TS">
+ <input file="/web/ACTIVE/J/JS_GAMES/videoModeC_TESTS/UAM/IMG/tiles.png" type="png" tile-width="8" tile-height="8" />
+ <output file="UAM/PROGMEM/tilesBG1.inc">
+ <tiles var-name="tilesBG1" tilesetOutputTo="PROGMEM" removeDupeTiles="1" />
+ <maps pointers-size="8">
+  <map var-name="blacktile" left="40" top="21" width="1" height="1" mapOutputTo="PROGMEM" />
+  <map var-name="transparentTile" left="18" top="1" width="1" height="1" mapOutputTo="SKIPMAP" />
+  <map var-name="testtile" left="22" top="1" width="1" height="1" mapOutputTo="PROGMEM" />
+  <map var-name="main_bg_pattern2" left="42" top="21" width="2" height="2" mapOutputTo="PROGMEM" />
+ </maps>
+ </output>
+</gfx-xform>
