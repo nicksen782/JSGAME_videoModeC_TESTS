@@ -288,13 +288,6 @@ game.game_full_restart = function(){
 
 //
 game.loop = function(){
-	// Debug: Performance check.
-	let logic_start;
-	if(JSGAME.FLAGS.debug){
-		logic_start=performance.now();
-		game.logic_timings.shift();
-	}
-
 	// Should the gameloop run or be skipped?
 	if(
 
@@ -311,22 +304,24 @@ game.loop = function(){
 	){
 		// *** Get inputs ***
 
+		// Debug: Performance check.
+		let logic_start;
+		if(JSGAME.FLAGS.debug) { logic_start = performance.now(); }
+
 		// JSGAME.SHARED.getUserInputs( game.buttons );
 		JSGAME.SHARED.getUserInputs();
 
 		// *** Run the current game state. ***
 
 		game.stateManager();
+
+		// Debug: Performance check.
+		if(JSGAME.FLAGS.debug) { game.logic_timings.shift(); game.logic_timings.push(performance.now() - logic_start);       }
 	}
 	else{
 		// Game logic is paused.
 	}
 
-	// Debug: Performance check.
-	if(JSGAME.FLAGS.debug){
-		game.logic_timings.pop();
-		game.logic_timings.push(performance.now()-logic_start);
-	}
 
 	// *** Output any graphical changes to the canvas. ***
 

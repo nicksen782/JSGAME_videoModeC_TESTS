@@ -60,7 +60,7 @@
 		}
 	},
 
-	"typeGamepads"      : "nes" ,
+	"typeGamepads"      : "snes" ,
 	"numGamepads"       : 1     ,
 
 	"graphics":{
@@ -85,10 +85,10 @@
 		],
 
 		"layers" : {
-			"BG1"  : { "clearWith":"black"      , "alpha":true, "clearBeforeDraw":false , "type":"VRAM"   },
-			"BG2"  : { "clearWith":"transparent", "alpha":true, "clearBeforeDraw":false , "type":"VRAM"   },
-			"TEXT" : { "clearWith":"transparent", "alpha":true, "clearBeforeDraw":false , "type":"VRAM"   },
-			"SP1"  : { "clearWith":"transparent", "alpha":true, "clearBeforeDraw":true , "type":"SPRITE" }
+			"BG1"  : { "clearWith":"black"      , "alpha":true, "clearCanvasBeforeUpdate":false , "type":"VRAM"   },
+			"BG2"  : { "clearWith":"transparent", "alpha":true, "clearCanvasBeforeUpdate":false , "type":"VRAM"   },
+			"TEXT" : { "clearWith":"transparent", "alpha":true, "clearCanvasBeforeUpdate":false , "type":"VRAM"   },
+			"SP1"  : { "clearWith":"transparent", "alpha":true, "clearCanvasBeforeUpdate":true , "type":"SPRITE" }
 		},
 		"layerDrawOrder": [ "BG1", "BG2", "TEXT", "SP1" ]
 	},

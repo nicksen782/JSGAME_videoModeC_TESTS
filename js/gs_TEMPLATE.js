@@ -17,26 +17,26 @@ game.gs.TESTS1 = {
 		let consts = gs.consts;
 
 		vars.init=false;
-		// _CGF.clearSprites();
+		_CGF.ClearSprites();
 		_CGF.ClearVram();
 
-		// cursor1_f1
-		// cursor1_f2
-		// cursor1_f3
-		// testArrow1_r
-		// testArrow2_r
-		// testArrow1_r_3x4
-		// testArrow2_r_3x4
-		// testArrow3_r_3x4
-		// testArrow3_u_4x3
-		// stick_figure_f1
-		// stick_figure_f2
-		// stick_figure_f3
-		// stick_figure_f4
-		// stick_figure_f5
-		// stick_figure_f6
-		// stick_figure_f7
-		// stick_figure_f8
+		vars.gamepad = {
+			// Absolute position.
+			"gamepad":{ "flags":{"spriteIndex":20, "OFF":true }, "x":0+(4 *_CS.TILE_WIDTH), "y":0+(16*_CS.TILE_HEIGHT), "map":"snes_gp"     , "tileset":"tilesSP1" , "layer":"SP1" },
+			// Position relative to the gamepad x,y.
+			"SL"     :{ "flags":{"spriteIndex":21, "OFF":true }, "x":0+(2 *_CS.TILE_WIDTH), "y":0+(0 *_CS.TILE_HEIGHT), "map":"snes_gp_btn1", "tileset":"tilesSP1" , "layer":"SP1" },
+			"SR"     :{ "flags":{"spriteIndex":22, "OFF":true }, "x":0+(13*_CS.TILE_WIDTH), "y":0+(0 *_CS.TILE_HEIGHT), "map":"snes_gp_btn1", "tileset":"tilesSP1" , "layer":"SP1" },
+			"UP"     :{ "flags":{"spriteIndex":23, "OFF":true }, "x":4+(3 *_CS.TILE_WIDTH), "y":0+(2 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"DOWN"   :{ "flags":{"spriteIndex":24, "OFF":true }, "x":4+(3 *_CS.TILE_WIDTH), "y":0+(5 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"LEFT"   :{ "flags":{"spriteIndex":25, "OFF":true }, "x":0+(2 *_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"RIGHT"  :{ "flags":{"spriteIndex":26, "OFF":true }, "x":0+(5 *_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"SELECT" :{ "flags":{"spriteIndex":27, "OFF":true }, "x":0+(7 *_CS.TILE_WIDTH), "y":0+(4 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"START"  :{ "flags":{"spriteIndex":28, "OFF":true }, "x":2+(9 *_CS.TILE_WIDTH), "y":0+(4 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"B"      :{ "flags":{"spriteIndex":29, "OFF":true }, "x":4+(14*_CS.TILE_WIDTH), "y":0+(5 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"A"      :{ "flags":{"spriteIndex":30, "OFF":true }, "x":2+(16*_CS.TILE_WIDTH), "y":6+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"Y"      :{ "flags":{"spriteIndex":31, "OFF":true }, "x":0+(13*_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"X"      :{ "flags":{"spriteIndex":32, "OFF":true }, "x":4+(14*_CS.TILE_WIDTH), "y":0+(2 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+		};
 
 		vars.animations = {
 			"_data":{
@@ -172,6 +172,7 @@ game.gs.TESTS1 = {
 				"flags"       : {
 					"ROT":0, "FLIP_X":false, "FLIP_Y":true, "spriteIndex":8, "OFF":false,
 					"colorSwaps":[
+						["#916DDA", "#00916D"]
 					],
 				},
 				"x"           : (19) * _CS['TILE_WIDTH'] ,
@@ -190,6 +191,7 @@ game.gs.TESTS1 = {
 				"flags"       : {
 					"ROT":0, "FLIP_X":true, "FLIP_Y":true, "spriteIndex":8, "OFF":false,
 					"colorSwaps":[
+						["#FFB624", "#00B6FF"]
 					],
 				},
 				"x"           : (19) * _CS['TILE_WIDTH'] ,
@@ -222,6 +224,8 @@ game.gs.TESTS1 = {
 		vars.animations.stick_figure_animationFullRotation2 .x=(4+(5*1))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation2 .y=(5)*_CS.TILE_HEIGHT;
 		vars.animations.stick_figure_animationFullRotation3 .x=(4+(5*2))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation3 .y=(5)*_CS.TILE_HEIGHT;
 		vars.animations.stick_figure_animationFullRotation4 .x=(4+(5*3))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation4 .y=(5)*_CS.TILE_HEIGHT;
+
+		//
 
 		vars.END = false;
 	},
@@ -259,32 +263,37 @@ game.gs.TESTS1 = {
 
 		// Map Fill: sx, sy, nw, nh, tileset   , tilemap           , layer , flags
 		_CGF.MapFill(28, 0 , 4 , 2 , "tilesBG1", "main_bg_pattern2", "BG1" , {}   );
-		_CGF.MapFill(28, 3 , 4 , 2 , "tilesBG1", "main_bg_pattern2", "BG2" , {}   );
+		_CGF.MapFill(28, 3 , 4 , 2 , "tilesBG1", "main_bg_pattern2", "BG2" , { "colorSwaps":[ ["#00B624", "#00B6FF"] ] }   );
 		_CGF.MapFill(28, 6 , 4 , 2 , "tilesBG1", "main_bg_pattern2", "TEXT", {}   );
-
 
 		// Draw Map: x,  y , tileset   , tilemap           , layer  , flags
 		_CGF.DrawMap(0,  18, "tilesBG1", "main_bg_pattern2", "BG1"  , {}   );
 		_CGF.DrawMap(0,  21, "tilesBG1", "main_bg_pattern2", "BG2"  , {}   );
 		_CGF.DrawMap(0,  24, "tilesBG1", "main_bg_pattern2", "TEXT" , {}   );
 
-		return;
+		// Print:  x, y, string, tileset   , tilemap     , layer , flags
+		_CGF.Print(4, 10, "TEXT WITH FONT_WHITE.", "tilesTX1", "font_white", "TEXT", { "ROT":24, "colorSwaps":[ ["#DADAB6", "#00B6FF"] ] }   );
+		_CGF.Print(4, 11, "TEXT WITH FONT_BLACK.", "tilesTX1", "font_black", "TEXT", { "FLIP_X":true, "FLIP_Y":true }   );
+		// _CGF.TileFill(4, 10, 21, 1, "tilesBG1", 2        , "BG1" , {}   );
+		_CGF.TileFill(4, 11, 21, 1, "tilesBG1", 3        , "BG2" , {}   );
 
-		// core.GRAPHICS.FUNCS.DrawMap_customDimensions = function(x, y, tileset, tilemap  , layer, flags){}
-		// core.GRAPHICS.FUNCS.Print                    = function(tileset, fontmap, layer, flags, string){}
-		// core.GRAPHICS.FUNCS.Print_multiFont          = function(data){}
-
-		// Print tests.
-		//        (x, y , string                        , map         , tileset   , layer , flags)
-		_CGF.Print(0, 12, "I'm written with font_black.", "font_black", "tilesTX1", "TEXT", {}   );
-		_CGF.Print(0, 13, "I'm written with font_white.", "font_white", "tilesTX1", "TEXT", {}   );
-
-		// Multi-font print tests.
-		// (data)
+		// Print_multiFont: ( {x, y, text, font, maps, tileset, layer, flags } )
 		_CGF.Print_multiFont(
 			{
-				"x"       : 0,
-				"y"       : 15,
+				"x"       : 4,
+				"y"       : 13,
+				"text"    : "I use multiple fonts!" ,
+				"font"    : "111111111101010101010".split("").map(function(d){ return parseInt(d,10); }) ,
+				"maps"    : [ "font_black", "font_white" ],
+				"tileset" : "tilesTX1",
+				"layer"   : "TEXT",
+				"flags"   : { "ROT":180 }
+			},
+		);
+		_CGF.Print_multiFont(
+			{
+				"x"       : 4,
+				"y"       : 14,
 				"text"    : "I use multiple fonts!" ,
 				"font"    : "010101010101010101010".split("").map(function(d){ return parseInt(d,10); }) ,
 				"maps"    : [ "font_black", "font_white" ],
@@ -293,15 +302,14 @@ game.gs.TESTS1 = {
 				"flags"   : {}
 			},
 		);
+		// _CGF.TileFill(4, 13, 21, 1, "tilesBG1", 2        , "BG1" , {}   );
+		_CGF.TileFill(4, 14, 21, 1, "tilesBG1", 3        , "BG2" , {}   );
 
-		// Draw a tile map over a region.
-		//                           (sx, sy, nw, nh, map               , tileset   , layer, flags)
-		_CGF.DrawMap_customDimensions(0 ,17 ,14 , 4 , "main_bg_pattern2", "tilesBG1", "BG1", {}   ); // tilesBG1 to BG1
-		_CGF.Print(0 ,17, "TEXT OVER BG1", "font_white", "tilesTX1", "TEXT", {});
-		_CGF.Print(0 ,19, "TEXT OVER BG1", "font_black", "tilesTX1", "TEXT", {});
-		_CGF.DrawMap_customDimensions(15,17,14  , 4 , "main_bg_pattern2", "tilesBG1", "BG2", {}   ); // tilesBG1 to BG2
-		_CGF.Print(15,17, "TEXT OVER BG2", "font_white", "tilesTX1", "TEXT", {});
-		_CGF.Print(15,19, "TEXT OVER BG2", "font_black", "tilesTX1", "TEXT", {});
+		// (SPRITES) Gamepad tests.
+		// _CGF.DrawMap(4*_CS.TILE_WIDTH,  16*_CS.TILE_HEIGHT, "tilesSP1", "snes_gp", "SP1"  , {"spriteIndex":20}   );
+
+		// snes_gp_btn1
+		// snes_gp_btn2
 	},
 	//
 	main : function(){
@@ -316,23 +324,70 @@ game.gs.TESTS1 = {
 
 		// Run.
 		if(vars.init){
-			gs.doAnimations();
+			gs.doAnimations_1( vars.animations );
+			gs.doGamepad_1( vars.gamepad );
 		}
 	},
 
 	// *** SUPPORT FUNCTIONS ***
 
-	//
-	doAnimations : function( ){
+	doGamepad_1 : function( obj ){
 		let gs     = this;
 		let vars   = gs.vars;
 		let consts = gs.consts;
 
-		for(let key in vars.animations._data){
+		let btnKey;
+
+		if(obj.gamepad.flags.OFF){
+			btnKey="gamepad";
+			obj[btnKey].flags.OFF=false;
+			obj[btnKey].onscreen=true;
+			_CGF.DrawMap( obj[btnKey].x, obj[btnKey].y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags );
+		}
+
+		let gp_x = obj.gamepad.x;
+		let gp_y = obj.gamepad.y;
+
+		if( game.chkBtn("ANY"   , "btnPressed1") ){
+			if( game.chkBtn("BTN_B"     , "btnPressed1") ){ btnKey="B"     ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_Y"     , "btnPressed1") ){ btnKey="Y"     ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_START" , "btnPressed1") ){ btnKey="START" ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_SELECT", "btnPressed1") ){ btnKey="SELECT"; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_UP"    , "btnPressed1") ){ btnKey="UP"    ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_DOWN"  , "btnPressed1") ){ btnKey="DOWN"  ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_LEFT"  , "btnPressed1") ){ btnKey="LEFT"  ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_RIGHT" , "btnPressed1") ){ btnKey="RIGHT" ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_A"     , "btnPressed1") ){ btnKey="A"     ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_X"     , "btnPressed1") ){ btnKey="X"     ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_SL"    , "btnPressed1") ){ btnKey="SL"    ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_SR"    , "btnPressed1") ){ btnKey="SR"    ; obj[btnKey].flags.OFF=false; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+		}
+		if( game.chkBtn("ANY"   , "btnReleased1")){
+			if( game.chkBtn("BTN_B"     , "btnReleased1") ){ btnKey="B"     ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_Y"     , "btnReleased1") ){ btnKey="Y"     ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_START" , "btnReleased1") ){ btnKey="START" ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_SELECT", "btnReleased1") ){ btnKey="SELECT"; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_UP"    , "btnReleased1") ){ btnKey="UP"    ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_DOWN"  , "btnReleased1") ){ btnKey="DOWN"  ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_LEFT"  , "btnReleased1") ){ btnKey="LEFT"  ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_RIGHT" , "btnReleased1") ){ btnKey="RIGHT" ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_A"     , "btnReleased1") ){ btnKey="A"     ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_X"     , "btnReleased1") ){ btnKey="X"     ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_SL"    , "btnReleased1") ){ btnKey="SL"    ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+			if( game.chkBtn("BTN_SR"    , "btnReleased1") ){ btnKey="SR"    ; obj[btnKey].flags.OFF=true; _CGF.DrawMap( obj[btnKey].x+gp_x, obj[btnKey].y+gp_y, obj[btnKey].tileset, obj[btnKey].map, obj[btnKey].layer, obj[btnKey].flags ); }
+		}
+	},
+	//
+	doAnimations_1 : function( animObj ){
+		let gs     = this;
+		let vars   = gs.vars;
+		let consts = gs.consts;
+
+		for(let key in animObj._data){
 			// Get a handle on the data and the animation.
-			let data        = vars.animations._data[key] ;
+			let data        = animObj._data[key] ;
 			let active      = data.active                ;
-			let anim        = vars.animations[key]       ;
+			let anim        = animObj[key]       ;
 			if(!active){ continue; }
 
 			let maps        = anim.maps        ;

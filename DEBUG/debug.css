@@ -110,3 +110,8 @@
     margin: 2px;
     text-align: center; */
 }
+
+#DEBUG_DIV #debug_colorOutput_canvas1 {vertical-align:top; border:1px solid black;width: 64px;}
+#DEBUG_DIV #debug_colorOutput_canvas2 {vertical-align:top; border:1px solid black;width: 64px;}
+#DEBUG_DIV #debug_colorOutput_canvas_div {vertical-align:top;border:1px solid black;margin: 5px;width: 500px;height: 270px;}
+#DEBUG_DIV .debug_colorOutput_tile_canvases {width:16px; vertical-align:top;border:1px solid black;margin: 3px;}

@@ -58,6 +58,7 @@ game.DEBUG.init = function(){
 	game.DEBUG.DOM["DEBUG_forceRedraws"] = document.getElementById("DEBUG_forceRedraws");
 
 	game.DEBUG.DOM["DEBUG_MENU_DIV_2"] = document.getElementById("DEBUG_MENU_DIV_2");
+	game.DEBUG.DOM["DEBUG_MENU_DIV_3"] = document.getElementById("DEBUG_MENU_DIV_3");
 
 	// *****************
 	// *****************
@@ -182,13 +183,20 @@ game.DEBUG.updateDebugDisplay_funcs = {
 
 		// Get a list of the canvas layers.
 		let keys = Object.keys(core.GRAPHICS.performance.LAYERS);
+		keys.unshift("logic_timings");
 
 		let sum = function(a,c){ return a + c; }
 
 		//
 		for(let k=0; k<keys.length; k+=1){
 			let key=keys[k];
-			let rec = core.GRAPHICS.performance.LAYERS[key] ;
+			let rec;
+			if(key=="logic_timings"){
+				rec = game.logic_timings ;
+			}
+			else{
+				rec = core.GRAPHICS.performance.LAYERS[key] ;
+			}
 			let avg;
 
 			try{
@@ -350,6 +358,101 @@ game.DEBUG.showIndividualLayers = function(){
 
 };
 
+//
+game.DEBUG.showColorOnHover     = {
+	hasListener : false,
+	colorTableDrawn : false,
+
+	listener : function(e){
+		if(!game.DEBUG.showColorOnHover.colorTableDrawn){
+			// debug_colorOutput_canvas_div
+			// core.GRAPHICS.DATA.lookups.colors.r32_hex
+			// core.GRAPHICS.DATA.lookups.colors.r32_hex
+
+			game.DEBUG.showColorOnHover.colorTableDrawn=true;
+
+			let keys = Object.keys(core.GRAPHICS.DATA.lookups.colors.r32_hex);
+
+			let frag = document.createDocumentFragment();
+			let i=2;
+			for(let y=0; y<26; y+=1){
+				for(let x=0; x<10; x+=1){
+					let key = keys[i];
+					i+=1;
+
+					canvas=document.createElement("canvas");
+					canvas.classList.add("debug_colorOutput_tile_canvases");
+					canvas.setAttribute("title", "RGB HEX: " + key);
+					canvas.width  = core.SETTINGS.TILE_WIDTH;
+					canvas.height = core.SETTINGS.TILE_HEIGHT;
+					ctx=canvas.getContext("2d");
+					ctx.fillStyle = key;
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+					frag.appendChild(canvas);
+				}
+				let br = document.createDocumentFragment("br");
+				frag.appendChild(br);
+			}
+
+			let debug_colorOutput_canvas_div = document.getElementById("debug_colorOutput_canvas_div");
+			debug_colorOutput_canvas_div.appendChild(frag);
+		}
+
+		// important: correct mouse position:
+		var rect = this.getBoundingClientRect();
+		let x = Math.floor((e.clientX - rect.left) / (rect.right  - rect.left) * this.width ) ;
+		let y = Math.floor((e.clientY - rect.top)  / (rect.bottom - rect.top)  * this.height) ;
+
+		// var coord = "x=" + x + ", y=" + y;
+		var ctx   = this.getContext('2d');
+		var pixel = ctx.getImageData(x, y, 1, 1);
+		var tile  = ctx.getImageData(x, y, _CS.TILE_WIDTH*4, _CS.TILE_HEIGHT*4);
+		// let tile_canvas = document.createElement("canvas");
+
+		let key =
+			"#" +
+			( (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() )
+			+ ( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() )
+			+ ( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
+			// + ( (pixel.data[3]).toString(16).padStart(2, "0").toUpperCase() )
+		;
+
+		// Draw the tile.
+		let debug_colorOutput_canvas1 = document.getElementById("debug_colorOutput_canvas1");
+		let debug_colorOutput_ctx1    = debug_colorOutput_canvas1.getContext("2d");
+		debug_colorOutput_ctx1.putImageData(tile, 0, 0);
+
+		// Draw the pixel.
+		let debug_colorOutput_canvas2 = document.getElementById("debug_colorOutput_canvas2");
+		let debug_colorOutput_ctx2    = debug_colorOutput_canvas2.getContext("2d");
+		debug_colorOutput_ctx2.putImageData(pixel, 0, 0);
+
+		// Output some data.
+		let debug_colorOutput = document.getElementById("debug_colorOutput");
+		// debug_colorOutput.innerHTML = coord + "<br>" + key;
+		debug_colorOutput.innerHTML = "key: " + key;
+	},
+	add_listener    : function(){
+		console.log("add_listener");
+		game.DEBUG.showColorOnHover.hasListener=true;
+		core.GRAPHICS.canvas.OUTPUT.addEventListener("mousemove", game.DEBUG.showColorOnHover.listener, false);
+	},
+	remove_listener : function(){
+		console.log("remove_listener");
+		game.DEBUG.showColorOnHover.hasListener=false;
+		core.GRAPHICS.canvas.OUTPUT.removeEventListener("mousemove", game.DEBUG.showColorOnHover.listener, false);
+	},
+
+	// },
+	// function(){
+	// 	// core.GRAPHICS.DATA.lookups.colors.r332
+	// 	// core.GRAPHICS.DATA.lookups.colors.r32
+	// 	// http://jsfiddle.net/DV9Bw/1/
+
+};
+
+
 // Called periodically to update the displayed debug information.
 game.DEBUG.updateDebugDisplay = function(){
 	// PERFORMANCE DISPLAY (AVG TIMINGS)
@@ -366,6 +469,18 @@ game.DEBUG.updateDebugDisplay = function(){
 	// LAYERS
 	if(game.DEBUG.DOM["DEBUG_MENU_DIV_2"].classList.contains("active")){
 		game.DEBUG.showIndividualLayers();
+	}
+
+	// COLOR SELECTOR
+	if(game.DEBUG.DOM["DEBUG_MENU_DIV_3"].classList.contains("active")){
+		// Add the listener if it is not there.
+		if(!game.DEBUG.showColorOnHover.hasListener){
+			game.DEBUG.showColorOnHover.add_listener();
+		}
+	}
+	// Remove the listener if it is there.
+	else if(game.DEBUG.showColorOnHover.hasListener){
+		game.DEBUG.showColorOnHover.remove_listener();
 	}
 
 	// Update the debug_updateIndicator

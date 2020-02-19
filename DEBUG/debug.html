@@ -4,6 +4,7 @@
 		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_0',this);">START</div>
 		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_1',this);">CORE</div>
 		<div class="debugPanelButtons active" onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_2',this);">LAYERS</div>
+		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_3',this);">COLORS</div>
 
 		<div id="debug_updateIndicator">!</div>
 	</div>
@@ -78,6 +79,22 @@
 
 			<div id="DEBUG_LAYERS_table1" init="false">
 			</div>
+
+		</div>
+
+		<!-- COLOR SELECTOR -->
+		<div id="DEBUG_MENU_DIV_3" class="DEBUG_DIV_MENU_DIVS">
+			<br>COLOR SELECTOR<br>
+
+			<br>
+			<div id="debug_colorOutput"></div>
+			<canvas id="debug_colorOutput_canvas1" width="32" height="32"></canvas>
+			<canvas id="debug_colorOutput_canvas2" width="1"  height="1"></canvas>
+			<div id="debug_colorOutput_canvas_div"></div>
+
+
+			<!-- <div id="DEBUG_LAYERS_table1" init="false"> -->
+			<!-- </div> -->
 
 		</div>
 
