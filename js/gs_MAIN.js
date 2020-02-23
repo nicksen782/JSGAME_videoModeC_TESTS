@@ -320,8 +320,15 @@ game.loop = function(){
 	}
 	else{
 		// Game logic is paused.
-	}
+		//
 
+		// Make sure that the game loop cannot run again until this finishes.
+		// window.cancelAnimationFrame( JSGAME.SHARED.raf_id );
+		// JSGAME.SHARED.raf_id=null;
+
+		// Start the gameloop again.
+		// JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
+	}
 
 	// *** Output any graphical changes to the canvas. ***
 
@@ -329,21 +336,26 @@ game.loop = function(){
 	window.cancelAnimationFrame( JSGAME.SHARED.raf_id );
 	JSGAME.SHARED.raf_id=null;
 
-	// core.FUNCS.graphics.update_allLayers();
-	core.GRAPHICS.FUNCS.update_allLayers().then(
+	core.GRAPHICS.FUNCS.runTileFlagChangesQueue().then(
 		function(res){
-			// Start the gameloop again.
-			JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
+			core.GRAPHICS.FUNCS.update_allLayers().then(
+				function(res){
+					// Start the gameloop again.
+					JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
 
-			// Set JSGAME.FLAGS.allowDebugToRun if in DEBUG mode.
-			if(JSGAME.FLAGS.debug) { JSGAME.FLAGS.allowDebugToRun=true ; }
-			else                   { JSGAME.FLAGS.allowDebugToRun=false; }
+					// Set JSGAME.FLAGS.allowDebugToRun if in DEBUG mode.
+					if(JSGAME.FLAGS.debug) { JSGAME.FLAGS.allowDebugToRun=true ; }
+					else                   { JSGAME.FLAGS.allowDebugToRun=false; }
+				},
+				function(err){
+					let str=["=E= game.loop/update_allLayers: ERROR" ];
+					console.log(str,err);
+					throw Error(str);
+				}
+			);
 		},
-		function(err){
-			let str=["=E= game.loop/update_allLayers: ERROR" ];
-			console.log(str,err);
-			throw Error(str);
-		}
+		function(err){ console.log("err:", err); }
+
 	);
 };
 //

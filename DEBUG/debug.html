@@ -7,6 +7,8 @@
 		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_3',this);">COLORS</div>
 
 		<div id="debug_updateIndicator">!</div>
+		<div id="debug_updateIndicator2"></div>
+		<div id="debug_updateIndicator3"></div>
 	</div>
 
 	<div id="DEBUG_performance_table1">
@@ -86,12 +88,69 @@
 		<div id="DEBUG_MENU_DIV_3" class="DEBUG_DIV_MENU_DIVS">
 			<br>COLOR SELECTOR<br>
 
+			<!--
+			Hover over the canvasOUTPUT.
+			* See 32*32 region preview.
+			* See 1*1 region preview.
+
+			Click the canvasOUTPUT.
+			* Copy the 1*1 region preview to the source color canvas.
+			* Display RGBA32 HEX and Uzebox HEX/DEC.
+
+			Click a .debug_colorOutput_tile_canvases canvas.
+			* Copy the canvas to the destination color canvas.
+			* Display RGBA32 HEX and Uzebox HEX/DEC.
+			-->
+
+			<div id="DEBUG_color_hover_preview">
+				<div class="DEBUG_color_hover_preview_title">OUTPUT</div>
+
+				<canvas id="DEBUG_color_hover_preview_canvas2" class="canvas2" width="1" height="1"></canvas>
+				<canvas id="DEBUG_color_hover_preview_canvas1" class="canvas1" width="8" height="8"></canvas>
+
+				<div id="DEBUG_color_hover_preview_textinfo">
+				</div>
+			</div>
+
+			<div id="DEBUG_color_hover_preview_source">
+				<div class="DEBUG_color_hover_preview_title">SOURCE</div>
+
+				<canvas id="DEBUG_color_hover_preview_source_canvas1" class="canvas2" width="1" height="1"></canvas>
+
+				<div id="DEBUG_color_hover_preview_source_textinfo">
+					<!-- KEY:<br> -->
+					<!-- RGBA32HEX:<br> -->
+					<!-- UZE32HEX:<br> -->
+				</div>
+			</div>
+
+			<div id="DEBUG_color_hover_preview_destination">
+				<div class="DEBUG_color_hover_preview_title">DESTINATION</div>
+
+				<canvas id="DEBUG_color_hover_preview_destination_canvas1" class="canvas2" width="1" height="1"></canvas>
+
+				<div id="DEBUG_color_hover_preview_destination_textinfo">
+					<!-- KEY:<br> -->
+					<!-- RGBA32HEX:<br> -->
+					<!-- UZE32HEX:<br> -->
+				</div>
+			</div>
+
 			<br>
-			<div id="debug_colorOutput"></div>
-			<canvas id="debug_colorOutput_canvas1" width="32" height="32"></canvas>
-			<canvas id="debug_colorOutput_canvas2" width="1"  height="1"></canvas>
+			<br>
+			<br>
+			<br>
+			<br>
 			<div id="debug_colorOutput_canvas_div"></div>
 
+			<div style="display:none;">
+				<br>
+				<div id="debug_colorOutput"></div>
+				<canvas id="debug_colorOutput_canvas1" width="32" height="32"></canvas>
+				<canvas id="debug_colorOutput_canvas2" width="1"  height="1"></canvas>
+				<br>
+				<br>
+			</div>
 
 			<!-- <div id="DEBUG_LAYERS_table1" init="false"> -->
 			<!-- </div> -->

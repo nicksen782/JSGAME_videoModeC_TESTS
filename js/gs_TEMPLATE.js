@@ -20,24 +20,37 @@ game.gs.TESTS1 = {
 		_CGF.ClearSprites();
 		_CGF.ClearVram();
 
+		// ON-SCREEN GAMEPAD INPUT TESTING.
 		vars.gamepad = {
 			// Absolute position.
-			"gamepad":{ "flags":{"spriteIndex":20, "OFF":true }, "x":0+(4 *_CS.TILE_WIDTH), "y":0+(16*_CS.TILE_HEIGHT), "map":"snes_gp"     , "tileset":"tilesSP1" , "layer":"SP1" },
+			"gamepad":{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":0+(4 *_CS.TILE_WIDTH), "y":0+(18*_CS.TILE_HEIGHT), "map":"snes_gp"     , "tileset":"tilesSP1" , "layer":"SP1" },
 			// Position relative to the gamepad x,y.
-			"SL"     :{ "flags":{"spriteIndex":21, "OFF":true }, "x":0+(2 *_CS.TILE_WIDTH), "y":0+(0 *_CS.TILE_HEIGHT), "map":"snes_gp_btn1", "tileset":"tilesSP1" , "layer":"SP1" },
-			"SR"     :{ "flags":{"spriteIndex":22, "OFF":true }, "x":0+(13*_CS.TILE_WIDTH), "y":0+(0 *_CS.TILE_HEIGHT), "map":"snes_gp_btn1", "tileset":"tilesSP1" , "layer":"SP1" },
-			"UP"     :{ "flags":{"spriteIndex":23, "OFF":true }, "x":4+(3 *_CS.TILE_WIDTH), "y":0+(2 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"DOWN"   :{ "flags":{"spriteIndex":24, "OFF":true }, "x":4+(3 *_CS.TILE_WIDTH), "y":0+(5 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"LEFT"   :{ "flags":{"spriteIndex":25, "OFF":true }, "x":0+(2 *_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"RIGHT"  :{ "flags":{"spriteIndex":26, "OFF":true }, "x":0+(5 *_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"SELECT" :{ "flags":{"spriteIndex":27, "OFF":true }, "x":0+(7 *_CS.TILE_WIDTH), "y":0+(4 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"START"  :{ "flags":{"spriteIndex":28, "OFF":true }, "x":2+(9 *_CS.TILE_WIDTH), "y":0+(4 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"B"      :{ "flags":{"spriteIndex":29, "OFF":true }, "x":4+(14*_CS.TILE_WIDTH), "y":0+(5 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"A"      :{ "flags":{"spriteIndex":30, "OFF":true }, "x":2+(16*_CS.TILE_WIDTH), "y":6+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"Y"      :{ "flags":{"spriteIndex":31, "OFF":true }, "x":0+(13*_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
-			"X"      :{ "flags":{"spriteIndex":32, "OFF":true }, "x":4+(14*_CS.TILE_WIDTH), "y":0+(2 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"SL"     :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":0+(2 *_CS.TILE_WIDTH), "y":0+(0 *_CS.TILE_HEIGHT), "map":"snes_gp_btn1", "tileset":"tilesSP1" , "layer":"SP1" },
+			"SR"     :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":0+(13*_CS.TILE_WIDTH), "y":0+(0 *_CS.TILE_HEIGHT), "map":"snes_gp_btn1", "tileset":"tilesSP1" , "layer":"SP1" },
+			"UP"     :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":4+(3 *_CS.TILE_WIDTH), "y":0+(2 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"DOWN"   :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":4+(3 *_CS.TILE_WIDTH), "y":0+(5 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"LEFT"   :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":0+(2 *_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"RIGHT"  :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":0+(5 *_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"SELECT" :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":0+(7 *_CS.TILE_WIDTH), "y":0+(4 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"START"  :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":2+(9 *_CS.TILE_WIDTH), "y":0+(4 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"B"      :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":4+(14*_CS.TILE_WIDTH), "y":0+(5 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"A"      :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":2+(16*_CS.TILE_WIDTH), "y":6+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"Y"      :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":0+(13*_CS.TILE_WIDTH), "y":4+(3 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
+			"X"      :{ "flags":{"spriteIndex":undefined, "OFF":true }, "x":4+(14*_CS.TILE_WIDTH), "y":0+(2 *_CS.TILE_HEIGHT), "map":"snes_gp_btn2", "tileset":"tilesSP1" , "layer":"SP1" },
 		};
+		// Set the spriteIndex for each animation.
+		let i=0; // Keeps the spriteIndex.
+		for(let key in vars.gamepad){
+			let data        = vars.gamepad[key] ;
+			let active      = data.active       ;
+			let anim        = vars.gamepad[key] ;
+			// if(!active){ continue; }
+			let flags       = anim.flags        ;
+			flags.spriteIndex=i;
+			i+=1;
+		}
 
+		// ANIMATION SET 1
 		vars.animations = {
 			"_data":{
 				"stick_figure_animation_r0"   : { "active":true },
@@ -60,7 +73,7 @@ game.gs.TESTS1 = {
 				"tileset"     : "tilesSP1",
 				"layer"       : "SP1",
 				"flags"       : {
-					"ROT":0, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":8, "OFF":false,
+					"ROT":0, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
 					],
 				},
@@ -78,8 +91,10 @@ game.gs.TESTS1 = {
 				"tileset"     : "tilesSP1",
 				"layer"       : "SP1",
 				"flags"       : {
-					"ROT":90, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":8, "OFF":false,
+					"ROT":90, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
+						["#FFB624","#FF0000"], // inside
+						["#916DDA","#FFFFFF"] // outside
 					],
 				},
 				"x"           : (4) * _CS['TILE_WIDTH'] ,
@@ -96,7 +111,7 @@ game.gs.TESTS1 = {
 				"tileset"     : "tilesSP1",
 				"layer"       : "SP1",
 				"flags"       : {
-					"ROT":180, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":8, "OFF":false,
+					"ROT":180, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
 					],
 				},
@@ -114,7 +129,7 @@ game.gs.TESTS1 = {
 				"tileset"     : "tilesSP1",
 				"layer"       : "SP1",
 				"flags"       : {
-					"ROT":0, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":8, "OFF":false,
+					"ROT":270, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
 					],
 				},
@@ -134,8 +149,13 @@ game.gs.TESTS1 = {
 				"tileset"     : "tilesSP1",
 				"layer"       : "SP1",
 				"flags"       : {
-					"ROT":0, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":8, "OFF":false,
+					"ROT":0, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
+						// ["#916DDA", "#000000"], // Outline (purple to )
+						// ["#FFB624", "#FFFFFF"]  // Inside (orange to )
+
+						["#916DDA", "#FFFFFF"], // Outline (purple to )
+						["#FFB624", "#000000"]  // Inside (orange to )
 					],
 				},
 				"x"           : (19) * _CS['TILE_WIDTH'] ,
@@ -152,8 +172,10 @@ game.gs.TESTS1 = {
 				"tileset"     : "tilesSP1",
 				"layer"       : "SP1",
 				"flags"       : {
-					"ROT":0, "FLIP_X":true, "FLIP_Y":false, "spriteIndex":8, "OFF":false,
+					"ROT":0, "FLIP_X":true, "FLIP_Y":false, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
+						["#916DDA", "#FFB624"], // Outline (purple to )
+						["#FFB624", "#916DDA"]  // Inside (orange to )
 					],
 				},
 				"x"           : (19) * _CS['TILE_WIDTH'] ,
@@ -170,9 +192,10 @@ game.gs.TESTS1 = {
 				"tileset"     : "tilesSP1",
 				"layer"       : "SP1",
 				"flags"       : {
-					"ROT":0, "FLIP_X":false, "FLIP_Y":true, "spriteIndex":8, "OFF":false,
+					"ROT":0, "FLIP_X":false, "FLIP_Y":true, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
-						["#916DDA", "#00916D"]
+						["#916DDA", "#FFFFFF"], // Outline (purple to )
+						["#FFB624", "#0000FF"]  // Inside (orange to )
 					],
 				},
 				"x"           : (19) * _CS['TILE_WIDTH'] ,
@@ -189,9 +212,10 @@ game.gs.TESTS1 = {
 				"tileset"     : "tilesSP1",
 				"layer"       : "SP1",
 				"flags"       : {
-					"ROT":0, "FLIP_X":true, "FLIP_Y":true, "spriteIndex":8, "OFF":false,
+					"ROT":0, "FLIP_X":true, "FLIP_Y":true, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
-						["#FFB624", "#00B6FF"]
+						["#916DDA", "#00FF00"], // Outline (purple to )
+						["#FFB624", "#FF0000"]  // Inside (orange to )
 					],
 				},
 				"x"           : (19) * _CS['TILE_WIDTH'] ,
@@ -204,7 +228,6 @@ game.gs.TESTS1 = {
 		};
 
 		// Set the spriteIndex for each animation.
-		let i=0;
 		for(let key in vars.animations._data){
 			let data        = vars.animations._data[key] ;
 			let active      = data.active                ;
@@ -216,17 +239,55 @@ game.gs.TESTS1 = {
 		}
 
 		// Set the x and y for each animation.
-		vars.animations.stick_figure_animation_r0           .x=(4+(5*0))*_CS.TILE_WIDTH; vars.animations.stick_figure_animation_r0           .y=(0)*_CS.TILE_HEIGHT;
-		vars.animations.stick_figure_animation_r90          .x=(4+(5*1))*_CS.TILE_WIDTH; vars.animations.stick_figure_animation_r90          .y=(0)*_CS.TILE_HEIGHT;
-		vars.animations.stick_figure_animation_r180         .x=(4+(5*2))*_CS.TILE_WIDTH; vars.animations.stick_figure_animation_r180         .y=(0)*_CS.TILE_HEIGHT;
-		vars.animations.stick_figure_animation_r270         .x=(4+(5*3))*_CS.TILE_WIDTH; vars.animations.stick_figure_animation_r270         .y=(0)*_CS.TILE_HEIGHT;
-		vars.animations.stick_figure_animationFullRotation1 .x=(4+(5*0))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation1 .y=(5)*_CS.TILE_HEIGHT;
-		vars.animations.stick_figure_animationFullRotation2 .x=(4+(5*1))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation2 .y=(5)*_CS.TILE_HEIGHT;
-		vars.animations.stick_figure_animationFullRotation3 .x=(4+(5*2))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation3 .y=(5)*_CS.TILE_HEIGHT;
-		vars.animations.stick_figure_animationFullRotation4 .x=(4+(5*3))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation4 .y=(5)*_CS.TILE_HEIGHT;
+		vars.animations.stick_figure_animation_r0           .x=(4+(6*0))*_CS.TILE_WIDTH; vars.animations.stick_figure_animation_r0           .y=(0)*_CS.TILE_HEIGHT;
+		vars.animations.stick_figure_animation_r90          .x=(4+(6*1))*_CS.TILE_WIDTH; vars.animations.stick_figure_animation_r90          .y=(0)*_CS.TILE_HEIGHT;
+		vars.animations.stick_figure_animation_r180         .x=(4+(6*2))*_CS.TILE_WIDTH; vars.animations.stick_figure_animation_r180         .y=(0)*_CS.TILE_HEIGHT;
+		vars.animations.stick_figure_animation_r270         .x=(4+(6*3))*_CS.TILE_WIDTH; vars.animations.stick_figure_animation_r270         .y=(0)*_CS.TILE_HEIGHT;
+		vars.animations.stick_figure_animationFullRotation1 .x=(4+(6*0))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation1 .y=(6)*_CS.TILE_HEIGHT;
+		vars.animations.stick_figure_animationFullRotation2 .x=(4+(6*1))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation2 .y=(6)*_CS.TILE_HEIGHT;
+		vars.animations.stick_figure_animationFullRotation3 .x=(4+(6*2))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation3 .y=(6)*_CS.TILE_HEIGHT;
+		vars.animations.stick_figure_animationFullRotation4 .x=(4+(6*3))*_CS.TILE_WIDTH; vars.animations.stick_figure_animationFullRotation4 .y=(6)*_CS.TILE_HEIGHT;
 
-		//
+		// ANIMATION SET 2
+		vars.animations2 = {
+			"_data":{
+				"stick_figure_animation_running"   : { "active":true },
+			},
 
+			"stick_figure_animation_running":{
+				"maps"        : [
+					"stick_figure_f1","stick_figure_f2","stick_figure_f3","stick_figure_f4",
+					"stick_figure_f5","stick_figure_f6","stick_figure_f7","stick_figure_f8"
+				],
+				"tileset"     : "tilesSP1",
+				"layer"       : "SP1",
+				"flags"       : {
+					"ROT":0, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":undefined, "OFF":false,
+					"colorSwaps":[
+						// ["#916DDA", "#00FF00"], // Outline (purple to )
+						// ["#FFB624", "#FF0000"]  // Inside (orange to )
+					],
+				},
+				"x"           : (4) * _CS['TILE_WIDTH']  ,
+				"y"           : 26  * _CS['TILE_HEIGHT'] ,
+				// "xDir"        : 1 * _CS['TILE_WIDTH']   ,
+				"xDir"        : 8   ,
+				"nextFrameAt" : 4,
+				"curFrameCnt" : 7,
+				"curFrame"    : 0,
+			},
+		};
+		for(let key in vars.animations2._data){
+			let data        = vars.animations2._data[key] ;
+			let active      = data.active                ;
+			let anim        = vars.animations2[key]       ;
+			if(!active){ continue; }
+			let flags       = anim.flags       ;
+			flags.spriteIndex=i;
+			i+=1;
+		}
+
+		console.log("last i:", i);
 		vars.END = false;
 	},
 	//
@@ -235,7 +296,7 @@ game.gs.TESTS1 = {
 		let vars  = gs.vars;
 
 		// Draw Tile: x, y, tileset  , tileindex , layer  , flags
-		_CGF.DrawTile(0, 0, "tilesBG1", 1        , "BG1"  , {}   );
+		_CGF.DrawTile(0, 0, "tilesBG1", 1        , "BG1"  , { "colorSwaps":[ ["#48DAFF", "#FFFF24"] ] }   );
 		_CGF.DrawTile(1, 0, "tilesBG1", 2        , "BG1"  , {}   );
 		_CGF.DrawTile(2, 0, "tilesBG1", 3        , "BG1"  , {}   );
 		_CGF.DrawTile(0, 1, "tilesTX1", 1+63     , "BG1"  , {}   );
@@ -271,30 +332,30 @@ game.gs.TESTS1 = {
 		_CGF.DrawMap(0,  21, "tilesBG1", "main_bg_pattern2", "BG2"  , {}   );
 		_CGF.DrawMap(0,  24, "tilesBG1", "main_bg_pattern2", "TEXT" , {}   );
 
-		// Print:  x, y, string, tileset   , tilemap     , layer , flags
-		_CGF.Print(4, 10, "TEXT WITH FONT_WHITE.", "tilesTX1", "font_white", "TEXT", { "ROT":24, "colorSwaps":[ ["#DADAB6", "#00B6FF"] ] }   );
-		_CGF.Print(4, 11, "TEXT WITH FONT_BLACK.", "tilesTX1", "font_black", "TEXT", { "FLIP_X":true, "FLIP_Y":true }   );
-		// _CGF.TileFill(4, 10, 21, 1, "tilesBG1", 2        , "BG1" , {}   );
-		_CGF.TileFill(4, 11, 21, 1, "tilesBG1", 3        , "BG2" , {}   );
+		// Print:  x, y , string                 , tileset   , tilemap           , layer , flags
+		_CGF.Print(4, 12, "FONT TEST 1 ABCD1234.", "tilesTX1", "font_black_basic", "TEXT", { }  );
+		_CGF.Print(4, 13, "FONT TEST 2 ABCD1234.", "tilesTX1", "font_white_basic", "TEXT", { }  );
+		_CGF.Print(4, 14, "FONT TEST 3 ABCD1234.", "tilesTX1", "font_white", "TEXT", { }  );
+		_CGF.Print(4, 15, "FONT TEST 4 ABCD1234.", "tilesTX1", "font_black", "TEXT", { }  );
 
 		// Print_multiFont: ( {x, y, text, font, maps, tileset, layer, flags } )
 		_CGF.Print_multiFont(
 			{
 				"x"       : 4,
-				"y"       : 13,
-				"text"    : "I use multiple fonts!" ,
-				"font"    : "111111111101010101010".split("").map(function(d){ return parseInt(d,10); }) ,
-				"maps"    : [ "font_black", "font_white" ],
+				"y"       : 16,
+				"text"    : "FONT TEST 5 ABCD1234." ,
+				"font"    : "010101010101010101010".split("").map(function(d){ return parseInt(d,10); }) ,
+				"maps"    : [ "font_black_basic", "font_white_basic" ],
 				"tileset" : "tilesTX1",
 				"layer"   : "TEXT",
-				"flags"   : { "ROT":180 }
+				"flags"   : { }
 			},
 		);
 		_CGF.Print_multiFont(
 			{
 				"x"       : 4,
-				"y"       : 14,
-				"text"    : "I use multiple fonts!" ,
+				"y"       : 17,
+				"text"    : "FONT TEST 6 ABCD1234." ,
 				"font"    : "010101010101010101010".split("").map(function(d){ return parseInt(d,10); }) ,
 				"maps"    : [ "font_black", "font_white" ],
 				"tileset" : "tilesTX1",
@@ -303,13 +364,20 @@ game.gs.TESTS1 = {
 			},
 		);
 		// _CGF.TileFill(4, 13, 21, 1, "tilesBG1", 2        , "BG1" , {}   );
-		_CGF.TileFill(4, 14, 21, 1, "tilesBG1", 3        , "BG2" , {}   );
+		_CGF.TileFill(4, 16, 21, 1, "tilesBG1", 3        , "BG2" , {}   );
+
+		_CGF.TileFill(4, 0, 23, 5, "tilesBG1", 2        , "BG2" , {}   );
+		_CGF.TileFill(4, 6, 23, 5, "tilesBG1", 3        , "BG1" , {}   );
 
 		// (SPRITES) Gamepad tests.
 		// _CGF.DrawMap(4*_CS.TILE_WIDTH,  16*_CS.TILE_HEIGHT, "tilesSP1", "snes_gp", "SP1"  , {"spriteIndex":20}   );
 
 		// snes_gp_btn1
 		// snes_gp_btn2
+
+		// setTimeout(function(){
+		// 	vars.END = true;
+		// }, 5000);
 	},
 	//
 	main : function(){
@@ -325,6 +393,7 @@ game.gs.TESTS1 = {
 		// Run.
 		if(vars.init){
 			gs.doAnimations_1( vars.animations );
+			gs.doAnimations_2( vars.animations2 );
 			gs.doGamepad_1( vars.gamepad );
 		}
 	},
@@ -420,6 +489,59 @@ game.gs.TESTS1 = {
 
 				// Draw.
 				_CGF.DrawMap(x, y, tileset, map, layer, flags);
+
+				// Update curFrame.
+				if(curFrame<maps.length-1){ anim.curFrame+=1; }
+				else                      { anim.curFrame =0; }
+			}
+			else{ anim.curFrameCnt +=1; }
+
+		}
+
+	},
+	doAnimations_2 : function( animObj ){
+		let gs     = this;
+		let vars   = gs.vars;
+		let consts = gs.consts;
+
+
+		for(let key in animObj._data){
+			// Get a handle on the data and the animation.
+			let data        = animObj._data[key] ;
+			let active      = data.active        ;
+			let anim        = animObj[key]       ;
+			if(!active){ continue; }
+
+			let maps        = anim.maps        ;
+			let nextFrameAt = anim.nextFrameAt ;
+			let curFrameCnt = anim.curFrameCnt ;
+			let curFrame    = anim.curFrame    ;
+			let tileset     = anim.tileset     ;
+			let layer       = anim.layer       ;
+			let flags       = anim.flags       ;
+			let x           = anim.x           ;
+			let y           = anim.y           ;
+			let map     = maps[curFrame];
+			let realMap = core.GRAPHICS.ASSETS.tilemaps[tileset][map];
+
+			// Is there a change required for the animation?
+			if(curFrameCnt >= nextFrameAt){
+				// Reset the curFrameCnt.
+				anim.curFrameCnt=0;
+
+				// Moving right.
+				if     ( Math.sign(anim.xDir) == 1 ){
+					if(anim.x<144){ anim.x+=anim.xDir; }
+					else{ anim.xDir *= -1; anim.flags.FLIP_X = true;  }
+				}
+				// Moving left.
+				else if( Math.sign(anim.xDir) == -1 ){
+					if(anim.x>32){ anim.x+=anim.xDir; }
+					else{ anim.xDir *= -1; anim.flags.FLIP_X = false;  }
+				}
+
+				// Draw.
+				_CGF.DrawMap(anim.x, anim.y, tileset, map, layer, flags);
 
 				// Update curFrame.
 				if(curFrame<maps.length-1){ anim.curFrame+=1; }

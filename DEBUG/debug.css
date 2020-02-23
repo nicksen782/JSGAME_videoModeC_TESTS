@@ -37,6 +37,8 @@
 #DEBUG_DIV .debugPanelButtons.active{ background-color:greenyellow;}
 #DEBUG_DIV #DEBUG_DIV_MENU_DIVS .DEBUG_DIV_MENU_DIVS{
 	display:none;
+	padding: 5px;
+	position: relative;
 }
 #DEBUG_DIV #DEBUG_DIV_MENU_DIVS .DEBUG_DIV_MENU_DIVS.active{
 	display:block;
@@ -90,6 +92,28 @@
 	line-height: 20px;
 	font-weight: bold;
 }
+#DEBUG_DIV #debug_updateIndicator2{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width: 10px;
+	height: 20px;
+	background-color: lightgray;
+	font-size: 12px;
+	line-height: 20px;
+	font-weight: bold;
+}
+#DEBUG_DIV #debug_updateIndicator3{
+	position:absolute;
+	top:0px;
+	left:25px;
+	width: 10px;
+	height: 20px;
+	background-color: lightgray;
+	font-size: 12px;
+	line-height: 20px;
+	font-weight: bold;
+}
 #DEBUG_DIV .layerDiv2 {
     border: 1px solid black;
     vertical-align: top;
@@ -113,5 +137,115 @@
 
 #DEBUG_DIV #debug_colorOutput_canvas1 {vertical-align:top; border:1px solid black;width: 64px;}
 #DEBUG_DIV #debug_colorOutput_canvas2 {vertical-align:top; border:1px solid black;width: 64px;}
-#DEBUG_DIV #debug_colorOutput_canvas_div {vertical-align:top;border:1px solid black;margin: 5px;width: 500px;height: 270px;}
-#DEBUG_DIV .debug_colorOutput_tile_canvases {width:16px; vertical-align:top;border:1px solid black;margin: 3px;}
+#DEBUG_DIV #debug_colorOutput_canvas_div {/* vertical-align:top; */border:1px solid black;background-color: #6a6377;padding: 5px;/* margin: 10px; *//* width: 386px; *//* height: 270px; *//* display: inline-block; *//* margin: auto; */position: absolute;top: 5px;left: 195px;font-size: 0px;}
+
+#DEBUG_DIV .debug_colorOutput_tile_canvases {width: 16px;height: 16px;/* height: 6px; */vertical-align: top;/* border:1px solid black; */margin: 1px;}
+
+
+/* COLOR HOVER PREVIEWS */
+
+#DEBUG_color_hover_preview{
+    border: 1px solid black;
+    min-height: 350px;
+    /* width: 200px; */
+    /* height: 410px; */
+    background-color: skyblue;
+    background-color: #6a6377;
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+#DEBUG_color_hover_preview_canvas1{
+    /* border: 1px solid black; */
+    /* min-height: 1em; */
+    width: 32px;
+    height: 32px;
+    vertical-align:top;
+}
+#DEBUG_color_hover_preview_canvas2{
+    /* border: 1px solid black; */
+    /* min-height: 1em; */
+    /* width: 32px; */
+    /* height: 32px; */
+    /* vertical-align:top; */
+}
+#DEBUG_color_hover_preview_textinfo{
+    border: 1px solid black;
+    /* min-height: 1em; */
+    min-height: 180px;
+}
+
+#DEBUG_color_hover_preview_source{
+    border: 1px solid black;
+    min-height: 245px;
+    width: 200px;
+    /* height: 135px; */
+    background-color: cornflowerblue;
+    position: absolute;
+    left: 5px;
+    top: 390px;
+}
+#DEBUG_color_hover_preview_source_canvas1{
+    border: 1px solid black;
+    min-height: 1em;
+    width: 32px;
+    height: 32px;
+    vertical-align:top;
+    margin: 2px 2px;
+}
+#DEBUG_color_hover_preview_source_textinfo{
+    border: 1px solid black;
+    min-height: 180px;
+    margin: 2px 2px;
+}
+
+#DEBUG_color_hover_preview_destination{
+    border: 1px solid black;
+    min-height: 245px;
+    width: 200px;
+    height: 135px;
+    background-color: cadetblue;
+    position: absolute;
+    left: 295px;
+    top: 390px;
+}
+#DEBUG_color_hover_preview_destination_canvas1{
+    border: 1px solid black;
+    min-height: 1em;
+    width: 32px;
+    height: 32px;
+    vertical-align:top;
+    margin: 2px 2px;
+}
+#DEBUG_color_hover_preview_destination_textinfo{
+    border: 1px solid black;
+    /* min-height: 1em; */
+    min-height: 180px;
+    margin: 2px 2px;
+}
+
+.DEBUG_color_hover_preview_title {
+    background-color: slategrey;
+    text-align: center;
+    text-decoration: underline;
+	font-weight: bold;
+	vertical-align:top;
+}
+#DEBUG_color_hover_preview .canvas1{
+	vertical-align: top;
+	/* border: 1px solid black; */
+	width: 128px;
+	height: 128px;
+	vertical-align:top;
+	margin: 2px 2px;
+	display: block;
+}
+#DEBUG_color_hover_preview .canvas2{
+	vertical-align: top;
+	/* border: 1px solid black; */
+	width: 16px;
+	height: 16px;
+	vertical-align:top;
+	margin: 2px 2px;
+	display: block;
+}

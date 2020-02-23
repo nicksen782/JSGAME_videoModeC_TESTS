@@ -183,7 +183,9 @@ game.DEBUG.updateDebugDisplay_funcs = {
 
 		// Get a list of the canvas layers.
 		let keys = Object.keys(core.GRAPHICS.performance.LAYERS);
-		keys.unshift("logic_timings");
+		keys.push("logic_timings");
+		keys.push("worker_timings1");
+		keys.push("update_layers_type2");
 
 		let sum = function(a,c){ return a + c; }
 
@@ -191,12 +193,13 @@ game.DEBUG.updateDebugDisplay_funcs = {
 		for(let k=0; k<keys.length; k+=1){
 			let key=keys[k];
 			let rec;
-			if(key=="logic_timings"){
-				rec = game.logic_timings ;
-			}
-			else{
-				rec = core.GRAPHICS.performance.LAYERS[key] ;
-			}
+
+			if(0){}
+			else if(key=="logic_timings")      { rec = game.logic_timings ; }
+			else if(key=="worker_timings1")    { rec = core.GRAPHICS.performance["worker_timings1"] ; }
+			else if(key=="update_layers_type2"){ rec = core.GRAPHICS.performance["update_layers_type2"] ; }
+			else                               { rec = core.GRAPHICS.performance.LAYERS[key] ; }
+
 			let avg;
 
 			try{
@@ -360,45 +363,10 @@ game.DEBUG.showIndividualLayers = function(){
 
 //
 game.DEBUG.showColorOnHover     = {
-	hasListener : false,
+	hasListeners : false,
 	colorTableDrawn : false,
 
-	listener : function(e){
-		if(!game.DEBUG.showColorOnHover.colorTableDrawn){
-			// debug_colorOutput_canvas_div
-			// core.GRAPHICS.DATA.lookups.colors.r32_hex
-			// core.GRAPHICS.DATA.lookups.colors.r32_hex
-
-			game.DEBUG.showColorOnHover.colorTableDrawn=true;
-
-			let keys = Object.keys(core.GRAPHICS.DATA.lookups.colors.r32_hex);
-
-			let frag = document.createDocumentFragment();
-			let i=2;
-			for(let y=0; y<26; y+=1){
-				for(let x=0; x<10; x+=1){
-					let key = keys[i];
-					i+=1;
-
-					canvas=document.createElement("canvas");
-					canvas.classList.add("debug_colorOutput_tile_canvases");
-					canvas.setAttribute("title", "RGB HEX: " + key);
-					canvas.width  = core.SETTINGS.TILE_WIDTH;
-					canvas.height = core.SETTINGS.TILE_HEIGHT;
-					ctx=canvas.getContext("2d");
-					ctx.fillStyle = key;
-					ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-					frag.appendChild(canvas);
-				}
-				let br = document.createDocumentFragment("br");
-				frag.appendChild(br);
-			}
-
-			let debug_colorOutput_canvas_div = document.getElementById("debug_colorOutput_canvas_div");
-			debug_colorOutput_canvas_div.appendChild(frag);
-		}
-
+	listener_mousemove : function(e){
 		// important: correct mouse position:
 		var rect = this.getBoundingClientRect();
 		let x = Math.floor((e.clientX - rect.left) / (rect.right  - rect.left) * this.width ) ;
@@ -412,36 +380,227 @@ game.DEBUG.showColorOnHover     = {
 
 		let key =
 			"#" +
-			( (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() )
+			(   (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() )
 			+ ( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() )
 			+ ( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
 			// + ( (pixel.data[3]).toString(16).padStart(2, "0").toUpperCase() )
 		;
 
+		// Is this valid? Stop if it is not valid.
+		let data = {};
+		try{
+			data = {
+				"uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
+				"uze_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_hex ,
+				"rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
+				"r32_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].r32_hex ,
+			};
+		}
+		catch(e){
+			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key);
+			return;
+		}
+
+		// let debug_colorOutput_canvas1 = document.getElementById("debug_colorOutput_canvas1");
+		// let debug_colorOutput_canvas2 = document.getElementById("debug_colorOutput_canvas2");
+		// let debug_colorOutput         = document.getElementById("debug_colorOutput");
+		let debug_colorOutput_canvas1 = document.getElementById("DEBUG_color_hover_preview_canvas1");
+		let debug_colorOutput_canvas2 = document.getElementById("DEBUG_color_hover_preview_canvas2");
+		let debug_colorOutput         = document.getElementById("DEBUG_color_hover_preview_textinfo");
+
 		// Draw the tile.
-		let debug_colorOutput_canvas1 = document.getElementById("debug_colorOutput_canvas1");
 		let debug_colorOutput_ctx1    = debug_colorOutput_canvas1.getContext("2d");
 		debug_colorOutput_ctx1.putImageData(tile, 0, 0);
 
 		// Draw the pixel.
-		let debug_colorOutput_canvas2 = document.getElementById("debug_colorOutput_canvas2");
 		let debug_colorOutput_ctx2    = debug_colorOutput_canvas2.getContext("2d");
 		debug_colorOutput_ctx2.putImageData(pixel, 0, 0);
 
 		// Output some data.
-		let debug_colorOutput = document.getElementById("debug_colorOutput");
 		// debug_colorOutput.innerHTML = coord + "<br>" + key;
-		debug_colorOutput.innerHTML = "key: " + key;
+		// debug_colorOutput.innerHTML = "key: " + key;
+
+		let str =
+		"<pre>" +
+		"DATA: " + JSON.stringify(data,null,1)
+		"</pre>" + "" ;
+
+		debug_colorOutput.innerHTML = str;
+
+		// core.GRAPHICS.DATA.lookups.colors.r32_hex[key]
 	},
-	add_listener    : function(){
-		console.log("add_listener");
-		game.DEBUG.showColorOnHover.hasListener=true;
-		core.GRAPHICS.canvas.OUTPUT.addEventListener("mousemove", game.DEBUG.showColorOnHover.listener, false);
+	listener_mousedown1 : function(e){
+		// If the user clicks the output canvas then the currently highlighted pixel (should be displayed in the pixel canvas) will be "locked".
+
+		// When clicking on the canvas_OUTPUT.
+
+		// Get canvas info.
+		let src_canvas = document.querySelector("#DEBUG_color_hover_preview_canvas2");
+		let dst_canvas = document.querySelector("#DEBUG_color_hover_preview_source_canvas1");
+		let dst_canvas_ctx = dst_canvas.getContext("2d");
+
+		var ctx   = src_canvas.getContext('2d');
+		var pixel = ctx.getImageData(0, 0, 1, 1);
+
+		let key =
+			"#" +
+			(   (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() )
+			+ ( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() )
+			+ ( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
+			// + ( (pixel.data[3]).toString(16).padStart(2, "0").toUpperCase() )
+		;
+
+		// Is this valid? Stop if it is not valid.
+
+		let data = {};
+		try{
+			data = {
+				"uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
+				"uze_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_hex ,
+				"rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
+				"r32_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].r32_hex ,
+			};
+		}
+		catch(e){
+			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key);
+			return;
+		}
+
+		// Update the text info.
+		let str =
+		"<pre>" +
+		"DATA: " + JSON.stringify(data,null,1)
+		"</pre>" + "" ;
+
+		let textinfo = document.getElementById("DEBUG_color_hover_preview_source_textinfo")
+		textinfo.innerHTML=str;
+
+		// Draw canvas.
+		dst_canvas_ctx.drawImage(src_canvas,0,0);
 	},
-	remove_listener : function(){
-		console.log("remove_listener");
-		game.DEBUG.showColorOnHover.hasListener=false;
-		core.GRAPHICS.canvas.OUTPUT.removeEventListener("mousemove", game.DEBUG.showColorOnHover.listener, false);
+	listener_mousedown2 : function(e){
+		// If the user clicks one of the destination canvases then the currently highlighted pixel (should be displayed in the pixel canvas) will be "locked".
+
+		// When clicking on destination color choices.
+
+		// Get canvas info.
+		let src_canvas = this;
+		let dst_canvas = document.querySelector("#DEBUG_color_hover_preview_destination_canvas1");
+		let dst_canvas_ctx = dst_canvas.getContext("2d");
+
+		var ctx   = src_canvas.getContext('2d');
+		var pixel = ctx.getImageData(0, 0, 1, 1);
+
+		let key =
+			"#" +
+			(   (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() )
+			+ ( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() )
+			+ ( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
+			// + ( (pixel.data[3]).toString(16).padStart(2, "0").toUpperCase() )
+		;
+
+		// Is this valid? Stop if it is not valid.
+
+		let data = {};
+		try{
+			data = {
+				"uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
+				"uze_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_hex ,
+				"rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
+				"r32_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].r32_hex ,
+			};
+		}
+		catch(e){
+			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key);
+			return;
+		}
+
+		// Update the text info.
+		let str =
+		"<pre>" +
+		"DATA: " + JSON.stringify(data,null,1)
+		"</pre>" + "" ;
+
+		let textinfo = document.getElementById("DEBUG_color_hover_preview_destination_textinfo")
+		textinfo.innerHTML=str;
+
+		// Draw canvas.
+		dst_canvas_ctx.drawImage(src_canvas,0,0);
+	},
+	add_listeners    : function(){
+		// Set the hasListeners flag.
+		game.DEBUG.showColorOnHover.hasListeners=true;
+
+		// Add the color table.
+		if(!game.DEBUG.showColorOnHover.colorTableDrawn){
+			// debug_colorOutput_canvas_div
+			// core.GRAPHICS.DATA.lookups.colors.r32_hex
+			// core.GRAPHICS.DATA.lookups.colors.r32_hex
+
+			game.DEBUG.showColorOnHover.colorTableDrawn=true;
+
+			let keys = Object.keys(core.GRAPHICS.DATA.lookups.colors.r32_hex);
+
+			let frag = document.createDocumentFragment();
+
+			let i=0;
+			for(let y=0; y<16; y+=1){
+				for(let x=0; x<16; x+=1){
+					let key = keys[i];
+					if(!key){ break; }
+
+					let uze_hex = core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_hex;
+
+					canvas=document.createElement("canvas");
+					canvas.classList.add("debug_colorOutput_tile_canvases");
+					canvas.setAttribute("title", "RGB HEX: " + key + ", uze_hex: "+ uze_hex);
+					canvas.width  = core.SETTINGS.TILE_WIDTH;
+					canvas.height = core.SETTINGS.TILE_HEIGHT;
+					ctx=canvas.getContext("2d");
+					ctx.fillStyle = key;
+					ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+					i+=1;
+
+					frag.appendChild(canvas);
+				}
+				let br = document.createElement("br");
+				frag.appendChild(br);
+			}
+
+			let debug_colorOutput_canvas_div = document.getElementById("debug_colorOutput_canvas_div");
+			debug_colorOutput_canvas_div.appendChild(frag);
+		}
+
+		// Add the mousemove listener. (canvas_OUTPUT)
+		core.GRAPHICS.canvas.OUTPUT.addEventListener("mousemove", game.DEBUG.showColorOnHover.listener_mousemove, false);
+
+		// Add the mousedown listener. (canvas_OUTPUT)
+		core.GRAPHICS.canvas.OUTPUT.addEventListener("mousedown", game.DEBUG.showColorOnHover.listener_mousedown1, false);
+
+		// Add the mousedown listener for all the .debug_colorOutput_tile_canvases .
+		let canvases = document.querySelectorAll(".debug_colorOutput_tile_canvases");
+		for(let i=0; i<canvases.length; i+=1){
+			let canvas = canvases[i];
+			canvas.addEventListener("mousedown", game.DEBUG.showColorOnHover.listener_mousedown2, false);
+		}
+	},
+	remove_listeners : function(){
+		// Clear the hasListeners flag.
+		game.DEBUG.showColorOnHover.hasListeners=false;
+
+		// Remove the mousemove listener. (canvas_OUTPUT)
+		core.GRAPHICS.canvas.OUTPUT.removeEventListener("mousemove", game.DEBUG.showColorOnHover.listener_mousemove, false);
+
+		// Remove the mousedown listener. (canvas_OUTPUT)
+		core.GRAPHICS.canvas.OUTPUT.removeEventListener("mousedown", game.DEBUG.showColorOnHover.listener_mousedown1, false);
+
+		// Remove the mousedown listener for all the .debug_colorOutput_tile_canvases .
+		let canvases = document.querySelectorAll(".debug_colorOutput_tile_canvases");
+		for(let i=0; i<canvases.length; i+=1){
+			let canvas = canvases[i];
+			canvas.removeEventListener("mousedown", game.DEBUG.showColorOnHover.listener_mousedown2, false);
+		}
 	},
 
 	// },
@@ -474,19 +633,21 @@ game.DEBUG.updateDebugDisplay = function(){
 	// COLOR SELECTOR
 	if(game.DEBUG.DOM["DEBUG_MENU_DIV_3"].classList.contains("active")){
 		// Add the listener if it is not there.
-		if(!game.DEBUG.showColorOnHover.hasListener){
-			game.DEBUG.showColorOnHover.add_listener();
+		if(!game.DEBUG.showColorOnHover.hasListeners){
+			console.log("Adding listeners for: showColorOnHover...");
+			game.DEBUG.showColorOnHover.add_listeners();
 		}
 	}
 	// Remove the listener if it is there.
-	else if(game.DEBUG.showColorOnHover.hasListener){
-		game.DEBUG.showColorOnHover.remove_listener();
+	else if(game.DEBUG.showColorOnHover.hasListeners){
+		console.log("Removing listeners for: showColorOnHover...");
+		game.DEBUG.showColorOnHover.remove_listeners();
 	}
 
 	// Update the debug_updateIndicator
 	debug_updateIndicator=document.getElementById("debug_updateIndicator");
-	if     (debug_updateIndicator.innerText=="!"){ debug_updateIndicator.innerText="." }
-	else if(debug_updateIndicator.innerText=="."){ debug_updateIndicator.innerText="!" }
+	if     (debug_updateIndicator.innerText=="!"){ debug_updateIndicator.innerText="."; }
+	else if(debug_updateIndicator.innerText=="."){ debug_updateIndicator.innerText="!"; }
 }
 
 // *** GAME-SPECIFIC DEBUG TESTS ***
