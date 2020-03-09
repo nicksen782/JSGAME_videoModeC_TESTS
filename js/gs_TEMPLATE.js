@@ -409,14 +409,14 @@ game.gs.TESTS2 = {
 						let type = data.menu_options[data.menu_index].type ;
 						let value = data.menu_options[data.menu_index].value ;
 						if     (type == "setFade"  ){
-							core.GRAPHICS.WORKERS.__fade.chainFadeActive=false;
+							core.GRAPHICS.FADE.chainFadeActive=false;
 							_CGFU.setFade(value);
 						}
 						else if(type == "chainFade"){ _CGFU.chainFade(value  , 100 , false); }
 					}
 					// Deactivate options. (Returns to full color and fade off.)
 					if     ( game.chkBtn("BTN_B"   , "btnPressed1") ){
-						core.GRAPHICS.WORKERS.__fade.chainFadeActive=false;
+						core.GRAPHICS.FADE.chainFadeActive=false;
 						_CGFU.setFade(10);
 					}
 
