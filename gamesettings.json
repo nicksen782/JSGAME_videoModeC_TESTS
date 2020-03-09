@@ -16,9 +16,9 @@
 	],
 
 	"links":[
-		{ "text":"Instructions", "href":"links/instructions.txt"                     , "target":"_blank" },
-		{ "text":"Credits"     , "href":"links/credits.txt"                          , "target":"_blank" },
-		{ "text":"Github"      , "href":"https://github.com/nicksen782/JSGAME_videoModeC_TESTS", "target":"_blank" }
+		{ "text":"Instructions (game)", "href":"links/instructions.txt"                               , "target":"_blank" },
+		{ "text":"Credits (game)"     , "href":"links/credits.txt"                                    , "target":"_blank" },
+		{ "text":"Github (game)"      , "href":"https://github.com/nicksen782/JSGAME_videoModeC_TESTS", "target":"_blank" }
 	],
 
 	"mp3_files": [
@@ -65,30 +65,30 @@
 
 	"graphics":{
 		"core":{
-			"TRANSLUCENT_COLOR" : "0xF2",
-			"TILE_WIDTH"        : 8     ,
-			"TILE_HEIGHT"       : 8     ,
-			"VRAM_TILES_H"      : 32    ,
-			"VRAM_TILES_V"      : 32    ,
-			"INTRO_LOGO"        : 1     ,
-			"FPS"               : 30    ,
-			"SCALE"             : 2.4
+			"TRANSLUCENT_COLOR" : "0xF2" ,
+			"TILE_WIDTH"        : 8      ,
+			"TILE_HEIGHT"       : 8      ,
+			"VRAM_TILES_H"      : 32     ,
+			"VRAM_TILES_V"      : 32     ,
+			"INTRO_LOGO"        : 1      ,
+			"FPS"               : 45     ,
+			"SCALE"             : 1.0
 		},
 
 		"inputTilesetData" : [
 			"UAM/PROGMEM/tiles.min.inc"
 		],
 		"tilesets":[
-			{"tileset":"tilesBG1", "convertTransparent":false },
-			{"tileset":"tilesTX1", "convertTransparent":true  },
-			{"tileset":"tilesSP1", "convertTransparent":true  }
+			{"tileset":"tilesBG1", "convertTransparent":true },
+			{"tileset":"tilesTX1", "convertTransparent":true },
+			{"tileset":"tilesSP1", "convertTransparent":true }
 		],
 
 		"layers" : {
-			"BG1"  : { "clearWith":"black"      , "alpha":true, "clearCanvasBeforeUpdate":false , "type":"VRAM"   },
-			"BG2"  : { "clearWith":"transparent", "alpha":true, "clearCanvasBeforeUpdate":false , "type":"VRAM"   },
-			"TEXT" : { "clearWith":"transparent", "alpha":true, "clearCanvasBeforeUpdate":false , "type":"VRAM"   },
-			"SP1"  : { "clearWith":"transparent", "alpha":true, "clearCanvasBeforeUpdate":true , "type":"SPRITE" }
+			"BG1"  : { "clearWith":"black"      , "alpha":false, "clearCanvasBeforeUpdate":true , "type":"VRAM"   },
+			"BG2"  : { "clearWith":"transparent", "alpha":true , "clearCanvasBeforeUpdate":true , "type":"VRAM"   },
+			"TEXT" : { "clearWith":"transparent", "alpha":true , "clearCanvasBeforeUpdate":true , "type":"VRAM"   },
+			"SP1"  : { "clearWith":"transparent", "alpha":true , "clearCanvasBeforeUpdate":true , "type":"SPRITE" }
 		},
 		"layerDrawOrder": [ "BG1", "BG2", "TEXT", "SP1" ]
 	},

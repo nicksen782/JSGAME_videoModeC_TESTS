@@ -3,11 +3,13 @@
  <input file="/web/ACTIVE/J/JS_GAMES/videoModeC_TESTS/UAM/IMG/tiles.png" type="png" tile-width="8" tile-height="8" />
  <output file="UAM/PROGMEM/tilesSP1.inc">
  <tiles var-name="tilesSP1" tilesetOutputTo="PROGMEM" removeDupeTiles="1" />
- <maps pointers-size="8">
+ <maps pointers-size="16">
   <map var-name="cursor1_f1" left="75" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
   <map var-name="cursor1_f2" left="76" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
   <map var-name="cursor1_f3" left="77" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
   <map var-name="testArrow1_r" left="45" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="testline_up" left="49" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="testline_up2" left="51" top="21" width="2" height="2" mapOutputTo="PROGMEM" /> 
   <map var-name="testArrow2_r" left="47" top="21" width="1" height="1" mapOutputTo="PROGMEM" /> 
   <map var-name="testArrow1_r_3x4" left="45" top="24" width="3" height="4" mapOutputTo="PROGMEM" /> 
   <map var-name="testArrow2_r_3x4" left="45" top="29" width="3" height="4" mapOutputTo="PROGMEM" /> 
@@ -21,9 +23,13 @@
   <map var-name="stick_figure_f6" left="64" top="30" width="5" height="5" mapOutputTo="PROGMEM" /> 
   <map var-name="stick_figure_f7" left="70" top="30" width="5" height="5" mapOutputTo="PROGMEM" /> 
   <map var-name="stick_figure_f8" left="76" top="30" width="5" height="5" mapOutputTo="PROGMEM" /> 
+  <map var-name="stick_figure2_f1" left="41" top="45" width="4" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="stick_figure2_f2" left="46" top="45" width="4" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="stick_figure2_f3" left="51" top="45" width="4" height="4" mapOutputTo="PROGMEM" /> 
+  <map var-name="stick_figure2_f4" left="56" top="45" width="4" height="4" mapOutputTo="PROGMEM" /> 
   <map var-name="snes_gp" left="41" top="36" width="19" height="8" mapOutputTo="PROGMEM" /> 
   <map var-name="snes_gp_btn1" left="61" top="36" width="4" height="1" mapOutputTo="PROGMEM" /> 
-  <map var-name="snes_gp_btn2" left="61" top="37" width="1" height="1" mapOutputTo="PROGMEM" /> 
+  <map var-name="snes_gp_btn2" left="61" top="38" width="1" height="1" mapOutputTo="PROGMEM" /> 
  </maps> 
  </output> 
 </gfx-xform> 

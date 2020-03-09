@@ -1,3 +1,5 @@
+'use strict';
+
 game.DEBUG       = {} ;
 game.DEBUG.DOM   = {} ;
 game.DEBUG.VALS  = {} ;
@@ -7,58 +9,60 @@ game.DEBUG.NAV   = {} ;
 //
 game.DEBUG.init = function(){
 	// DEBUG DOM CACHE
-	game.DEBUG.DOM["DEBUG_DIV"]      = document.getElementById("DEBUG_DIV");
-	game.DEBUG.DOM["debug_mode_chk"] = document.getElementById("debug_mode");
-
-	// Display of the performance.
-	game.DEBUG.DOM["avg_BG"]     = game.DEBUG.DOM["DEBUG_DIV"].querySelector("#avg_BG");
-	game.DEBUG.DOM["avg_SPRITE"] = game.DEBUG.DOM["DEBUG_DIV"].querySelector("#avg_SPRITE");
-	game.DEBUG.DOM["avg_TEXT"]   = game.DEBUG.DOM["DEBUG_DIV"].querySelector("#avg_TEXT");
-	game.DEBUG.DOM["avg_FADE"]   = game.DEBUG.DOM["DEBUG_DIV"].querySelector("#avg_FADE");
-	game.DEBUG.DOM["avg_OUTPUT"] = game.DEBUG.DOM["DEBUG_DIV"].querySelector("#avg_OUTPUT");
-	game.DEBUG.DOM["avg_TOTAL"]  = game.DEBUG.DOM["DEBUG_DIV"].querySelector("#avg_TOTAL");
-	game.DEBUG.DOM["avg_LOGIC"]  = game.DEBUG.DOM["DEBUG_DIV"].querySelector("#avg_LOGIC");
+	game.DEBUG.DOM.DEBUG_DIV      = document.getElementById("DEBUG_DIV");
+	game.DEBUG.DOM.debug_mode_chk = document.getElementById("debug_mode");
 
 	// Set flags and counters.
 	game.DEBUG.VALS.lastDebugDisplay=performance.now();  //
-	game.DEBUG.VALS.secondsToWait_debugDisplay = 1; // 1 equals 1 second.
+	game.DEBUG.VALS.secondsToWait_debugDisplay = 0.5; // 1 equals 1 second.
+	// game.DEBUG.VALS.secondsToWait_debugDisplay = 0.25; // 1 equals 1 second.
+	// game.DEBUG.VALS.secondsToWait_debugDisplay = JSGAME.SHARED.timing.interval * (core.SETTINGS.FPS); // 1 equals 1 second.
+	// game.DEBUG.VALS.secondsToWait_debugDisplay = (core.SETTINGS.FPS) / JSGAME.SHARED.timing.interval ; // 1 equals 1 second.
 
 	// *** Show the debug div. ***
 
 	// Set the normal site container to inline-block.
 	// Remove the hidden and noSelect classes from the debug DOM.
-	JSGAME.DOM["siteContainerDiv"].classList.add("inline_block");
-	JSGAME.DOM["sideDiv"].classList.remove("hide");
-	game.DEBUG.DOM["DEBUG_DIV"].classList.remove("hidden");
-	game.DEBUG.DOM["DEBUG_DIV"].classList.remove("noSelect");
+	JSGAME.DOM.siteContainerDiv.classList.add("inline_block");
+	JSGAME.DOM.sideDiv.classList.remove("hide");
+	game.DEBUG.DOM.DEBUG_DIV.classList.remove("hidden");
+	game.DEBUG.DOM.DEBUG_DIV.classList.remove("noSelect");
 
 	// Allow activing or de-activating the debug functions.
-	game.DEBUG.DOM["debug_mode_chk"].addEventListener("change", function(){
+	game.DEBUG.DOM.debug_mode_chk.addEventListener("change", function(){
 		// Change the debug flag per the checked value of the checkbox.
 		JSGAME.FLAGS.debug = this.checked;
 
 		// Adjust the DEBUG_DIV visibility.
 		if(JSGAME.FLAGS.debug){
-			game.DEBUG.DOM["DEBUG_DIV"].classList.remove("notActive");
-			game.DEBUG.DOM["DEBUG_DIV"].classList.remove("noSelect");
+			game.DEBUG.DOM.DEBUG_DIV.classList.remove("notActive");
+			game.DEBUG.DOM.DEBUG_DIV.classList.remove("noSelect");
 		}
 		else{
-			game.DEBUG.DOM["DEBUG_DIV"].classList.add("notActive");
-			game.DEBUG.DOM["DEBUG_DIV"].classList.add("noSelect");
+			game.DEBUG.DOM.DEBUG_DIV.classList.add("notActive");
+			game.DEBUG.DOM.DEBUG_DIV.classList.add("noSelect");
 		}
 	}, false);
 
-
 	// *****************
 	// *****************
-	game.DEBUG.DOM["DEBUG_MENU_DIV_0"] = document.getElementById("DEBUG_MENU_DIV_0");
 
-	game.DEBUG.DOM["DEBUG_MENU_DIV_1"] = document.getElementById("DEBUG_MENU_DIV_1");
-	game.DEBUG.DOM["DEBUG_setToUpdate"] = document.getElementById("DEBUG_setToUpdate");
-	game.DEBUG.DOM["DEBUG_forceRedraws"] = document.getElementById("DEBUG_forceRedraws");
+	// START
+	game.DEBUG.DOM.DEBUG_MENU_DIV_0   = document.getElementById("DEBUG_MENU_DIV_0");
 
-	game.DEBUG.DOM["DEBUG_MENU_DIV_2"] = document.getElementById("DEBUG_MENU_DIV_2");
-	game.DEBUG.DOM["DEBUG_MENU_DIV_3"] = document.getElementById("DEBUG_MENU_DIV_3");
+	// CORE
+	game.DEBUG.DOM.DEBUG_MENU_DIV_1  = document.getElementById("DEBUG_MENU_DIV_1");
+	game.DEBUG.DOM.DEBUG_setToUpdate  = document.getElementById("DEBUG_setToUpdate");
+	game.DEBUG.DOM.DEBUG_forceRedraws = document.getElementById("DEBUG_forceRedraws");
+
+	// LAYERS
+	game.DEBUG.DOM.DEBUG_MENU_DIV_2   = document.getElementById("DEBUG_MENU_DIV_2");
+
+	// COLOR SELECTOR
+	game.DEBUG.DOM.DEBUG_MENU_DIV_3   = document.getElementById("DEBUG_MENU_DIV_3");
+
+	// VARS DISPLAY
+	game.DEBUG.DOM.DEBUG_MENU_DIV_4   = document.getElementById("DEBUG_MENU_DIV_4");
 
 	// *****************
 	// *****************
@@ -68,7 +72,7 @@ game.DEBUG.init = function(){
 		let span = document.createElement("span");
 		span.classList.add("widespan1");
 		span.innerText="SET LAYER TO UPDATE:";
-		game.DEBUG.DOM["DEBUG_setToUpdate"].appendChild(span);
+		game.DEBUG.DOM.DEBUG_setToUpdate.appendChild(span);
 
 		// For each layer:
 		for(let c=0; c<core.SETTINGS.layerDrawOrder.length; c+=1){
@@ -77,7 +81,7 @@ game.DEBUG.init = function(){
 			button.innerText="(" + layerName + ")";
 			button.onclick=function(){ game.DEBUG.forceUpdate(layerName); };
 
-			game.DEBUG.DOM["DEBUG_setToUpdate"].appendChild(button);
+			game.DEBUG.DOM.DEBUG_setToUpdate.appendChild(button);
 			// game.DEBUG.DOM["DEBUG_setToUpdate"].appendChild(document.createElement("br"));
 		}
 	};
@@ -86,7 +90,7 @@ game.DEBUG.init = function(){
 		let span = document.createElement("span");
 		span.classList.add("widespan1");
 		span.innerText="SET LAYER TO REDRAW:";
-		game.DEBUG.DOM["DEBUG_forceRedraws"].appendChild(span);
+		game.DEBUG.DOM.DEBUG_forceRedraws.appendChild(span);
 
 		// For each layer:
 		for(let c=0; c<core.SETTINGS.layerDrawOrder.length; c+=1){
@@ -95,8 +99,8 @@ game.DEBUG.init = function(){
 			button.innerText="(" + layerName + ")";
 			button.onclick=function(){ game.DEBUG.forceRedraw(layerName); };
 
-			game.DEBUG.DOM["DEBUG_forceRedraws"].appendChild(button);
-			// game.DEBUG.DOM["DEBUG_forceRedraws"].appendChild(document.createElement("br"));
+			game.DEBUG.DOM.DEBUG_forceRedraws.appendChild(button);
+			// game.DEBUG.DOM.DEBUG_forceRedraws.appendChild(document.createElement("br"));
 		}
 
 	};
@@ -149,18 +153,6 @@ game.DEBUG.NAV.debug_hidePanels = function(){
 
 // *** DEBUG FUNCTIONS ***
 
-game.DEBUG.drawFlagsToConsole = function(){
-	console.log(
-		""  , ( core.GRAPHICS.flags.BG         == true ? 'BG         : TRUE' :'BG         :     ' ),
-		"\n", ( core.GRAPHICS.flags.SPRITE     == true ? 'SPRITE     : TRUE' :'SPRITE     :     ' ),
-		"\n", ( core.GRAPHICS.flags.TEXT       == true ? 'TEXT       : TRUE' :'TEXT       :     ' ),
-		"\n", ( core.GRAPHICS.flags.FADE       == true ? 'FADE       : TRUE' :'FADE       :     ' ),
-		"\n", ( core.GRAPHICS.flags.OUTPUT     == true ? 'OUTPUT     : TRUE' :'OUTPUT     :     ' ),
-		"\n", ( core.GRAPHICS.FADER.fadeActive == true ? 'fadeActive : TRUE' :'fadeActive :     ' ),
-		""
-	);
-};
-
 // *** DEBUG DISPLAY UPDATES ***
 
 game.DEBUG.forceUpdate = function(layer){
@@ -175,85 +167,205 @@ game.DEBUG.forceRedraw = function(layer){
 
 // Used by game.DEBUG.updateDebugDisplay.
 game.DEBUG.updateDebugDisplay_funcs = {
+	layerDataInfo_init:false,
+	layerDataInfo_data:{
+
+		"gameloop_timings" :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } , // Full measurement of the game loop (logic, draw, etc.)
+		"logic_timings"    :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"  -> "  } , // Measurement of specifically the logic_timings of the gameloop.
+		"gfx_timings"      :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"  -> "  } , // Full measurement of graphics updates.
+
+		"update_layers"    :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "} , // Measurement of time for all layers.
+
+		"layer_BG1"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> "} , // Measurement of time for all layers.
+		"layer_BG2"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> "} , // Measurement of time for all layers.
+		"layer_TEXT"       : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> "} , // Measurement of time for all layers.
+		"layer_SP1"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> "} , // Measurement of time for all layers.
+
+		"layer_combines"   :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "} , // Measurement of the layer combine time.
+		"fade_timings"     :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "} , // Measurement of the fade time.
+		"output_timings"   :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "} , // Measurement of the final graphics output time.
+
+		"topbar1"          :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } , //
+		"topbar2"          :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } , //
+		"debug_timings"    :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } ,  // Measurement of the debug loop (which happens when the main loop does not run.)
+		"doColorSwapping"  :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } , // Measurement of web-worker-based color swapping.
+	},
+	layerDataInfo_keys:{},
 	//
 	layerDataInfo : function(){
+		// return;
 		let elem = document.getElementById("DEBUG_performance_table1");
 
-		let output="";
+		// Set up the table if it has not yet been set up.
+		if(! game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_init){
+			let frag = document.createDocumentFragment();
 
-		// Get a list of the canvas layers.
-		let keys = Object.keys(core.GRAPHICS.performance.LAYERS);
-		keys.push("logic_timings");
-		keys.push("worker_timings1");
-		keys.push("update_layers_type2");
+			// Save the keys.
+			game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_keys = Object.keys(game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_data) ;
+			let keys = game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_keys ;
 
-		let sum = function(a,c){ return a + c; }
+			for(let i=0; i<keys.length; i+=1){
+				let key = keys[i];
+				let rec = game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_data[key];
 
-		//
-		for(let k=0; k<keys.length; k+=1){
-			let key=keys[k];
-			let rec;
+				if(!rec.displayThis){ continue; }
 
-			if(0){}
-			else if(key=="logic_timings")      { rec = game.logic_timings ; }
-			else if(key=="worker_timings1")    { rec = core.GRAPHICS.performance["worker_timings1"] ; }
-			else if(key=="update_layers_type2"){ rec = core.GRAPHICS.performance["update_layers_type2"] ; }
-			else                               { rec = core.GRAPHICS.performance.LAYERS[key] ; }
+				let div_cont = document.createElement("div");
+				let span_label = document.createElement("span");
+				let span_data1 = document.createElement("span");
 
-			let avg;
+				if(key=="topbar1" || key=="topbar2"){
+					div_cont.classList.add("DEBUG_layerDataInfo_div_cont");
 
-			try{
-				if(rec.length){
-					avg = rec.reduce(sum) / rec.length;
-					avg = avg.toFixed(2).padStart(6, " ");
+					span_label.classList.add("DEBUG_layerDataInfo_span_label");
+					span_label.innerText=(rec.i+key).toUpperCase();
+
+					span_data1.classList.add("DEBUG_layerDataInfo_span_data1");
+					span_data1.innerText="------------------";
 				}
 				else{
-					console.log("DEBUG: rec did not have a length.", key, rec);
-					return;
+					div_cont.classList.add("DEBUG_layerDataInfo_div_cont");
+
+					span_label.classList.add("DEBUG_layerDataInfo_span_label");
+					span_label.innerText=(rec.i+key).toUpperCase();
+
+					span_data1.classList.add("DEBUG_layerDataInfo_span_data1");
+					span_data1.innerText="AVG:  000.00% (000%) |>";
 				}
+				// Add DOM references to the object.
+				rec.r = div_cont;
+				rec.l = span_label;
+				rec.d = span_data1;
+				// rec.i = rec.i;
+
+				// Add the rows.
+				div_cont.appendChild(span_label);
+				div_cont.appendChild(span_data1);
+				frag.appendChild(div_cont);
+
 			}
-			catch(e){
-				// console.log(e, core.GRAPHICS.performance.LAYERS[key]);
-				let str = ["=E= DEBUG layerDataInfo:", e, key, core.GRAPHICS.performance.LAYERS[key]];
-				console.log(str);
-				throw Error(str);
-				return;
-			}
+			game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_init=true;
 
-			let recs = rec.map(function(d){ return d.toFixed(2).padStart(6, " "); });
-			recs = recs.join(", ");
-
-			let text = "";
-			text +="";
-			text +="";
-
-			output+="<div class='DEBUG_layerDataInfo_div_cont'>";
-
-				// Label:
-				output+="<span class='DEBUG_layerDataInfo_span_label'>";
-				output+="<b><u>"+key+"</u></b>";
-				output+="";
-				output+="</span>";
-
-				// Data1:
-				output+="<span class='DEBUG_layerDataInfo_span_data1'>";
-				output+=("<b><u>AVG:</u></b> "+avg+" ms, ");
-				output+="</span>";
-
-				// Data2:
-				output+="<span class='DEBUG_layerDataInfo_span_data2'>";
-				output+="<b></u>DATA:</u></b> "+recs+"";
-				output+="</span>";
-
-			output+="</div>\n";
-
-			// Add the text to the output.
-			output+=text;
+			elem.appendChild(frag);
+			return;
 		}
 
-		output='<div class="">'+output+'</div>';
+		// Used for getting an average.
+		let sum = function(a,c){ return a + c; } ;
 
-		elem.innerHTML=output;
+		// Update the info.
+		let keys = game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_keys ;
+
+		for(let i=0; i<keys.length; i+=1){
+			let key = keys[i];
+			let rec = game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_data[key];
+
+			if(!rec.displayThis){ continue; }
+
+			let span_data1 = rec.d ;
+
+			if(key=="topbar1" || key=="topbar2"){
+				// let topBarStatus = document.getElementById("debug_updateIndicator5");
+				if     (key=="topbar1"){
+					let str = "" +
+						("(I"    + ": " + ((game.DEBUG.lastloopTimings.interval).toFixed(2) + "ms"+") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						("(BETWEEN"  + ": " + ((game.DEBUG.lastloopTimings.time    ).toFixed(2) + "ms"+") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						("(P"    + ": " + ((game.DEBUG.lastloopTimings.percent ).toFixed(2) + "%" +") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						// ("(CFPS" + ": " + ((game.DEBUG.lastloopTimings.calcFPS ).toFixed(2) + ""  +") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						// ("(SFPS" + ": " + ((game.DEBUG.lastloopTimings.setFPS  ).toFixed(2) + ""  +") " ).padStart(1, " ")).padEnd(1, " ") + "  " +
+						""
+					;
+					span_data1.innerText = str;
+				}
+				else if(key=="topbar2"){
+					let str = "" +
+						// ("(I"    + ": " + ((game.DEBUG.lastloopTimings.interval).toFixed(2) + "ms"+") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						// ("(TSL"  + ": " + ((game.DEBUG.lastloopTimings.time    ).toFixed(2) + "ms"+") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						// ("(P"    + ": " + ((game.DEBUG.lastloopTimings.percent ).toFixed(2) + "%" +") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						("(CFPS" + ": " + ((game.DEBUG.lastloopTimings.calcFPS ).toFixed(2) + ""  +") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						("(SFPS" + ": " + ((game.DEBUG.lastloopTimings.setFPS  ).toFixed(2) + ""  +") " ).padStart(1, " ")).padEnd(1, " ") + "  " +
+						""
+					;
+					span_data1.innerText = str;
+				}
+			}
+			else{
+				// let div_cont   = rec.r ;
+				// let span_label = rec.l ;
+				// let span_data1 = rec.d ;
+				// let pre_indent = rec.i ;
+
+				let src_data;
+				// src_data = core.GRAPHICS.performance[key];
+				try{ src_data = core.GRAPHICS.DEBUG[key].durs; } catch(err){ continue; }
+				// src_data = core.GRAPHICS.performance.LAYERS[key]
+
+				let org_avg;
+				let avg;
+
+				// Try to get the average of the time measurements for this key.
+				try{
+					if(src_data.length){
+						avg = src_data.reduce(sum) / src_data.length;
+						org_avg = avg;
+						avg = avg.toFixed(2).padStart(6, " ");
+					}
+					else{
+						// console.log("DEBUG: src_data did not have a length.", key, src_data);
+						continue;
+					}
+				}
+				catch(e){
+					// console.log(e, core.GRAPHICS.performance.LAYERS[key]);
+					let str = ["=E= DEBUG layerDataInfo:", e, key, core.GRAPHICS.performance.LAYERS[key]];
+					console.log("***************", key, str);
+					throw Error(str);
+					return;
+				}
+
+				// span_data1
+				// Determine the "graphical" level.
+
+				let bg_css="";
+				let level;
+				let org_compareNum = (org_avg/JSGAME.SHARED.timing.interval)*100 << 0;
+				// console.log(org_compareNum);
+
+				let compareNum = JSGAME.SHARED.map_range(org_compareNum, 0, 100, 0, 26) << 0;
+				// compareNum=111;
+				// console.log(key, org_compareNum, compareNum);
+
+				if     ( org_compareNum >= 0  && org_compareNum < 15  ) { level="L0 |"+"-".repeat( ( Math.min(compareNum,26) ) )+">"; bg_css="DEBUG_clear";        }
+				else if( org_compareNum >= 15 && org_compareNum < 30  ) { level="L1 |"+"-".repeat( ( Math.min(compareNum,26) ) )+">"; bg_css="DEBUG_indeterminate";}
+				else if( org_compareNum >= 30 && org_compareNum < 45  ) { level="L2 |"+"-".repeat( ( Math.min(compareNum,26) ) )+">"; bg_css="DEBUG_warning";      }
+				else if( org_compareNum >= 45 && org_compareNum < 60  ) { level="L3 |"+"-".repeat( ( Math.min(compareNum,26) ) )+">"; bg_css="DEBUG_minor";        }
+				else if( org_compareNum >= 60 && org_compareNum < 75  ) { level="L4 |"+"-".repeat( ( Math.min(compareNum,26) ) )+">"; bg_css="DEBUG_major";        }
+				else if( org_compareNum >= 75 && org_compareNum < 95  ) { level="L5 |"+"=".repeat( ( Math.min(compareNum,26) ) )+">"; bg_css="DEBUG_critical";     }
+				else                                                    { level="L6 |"+'='.repeat( ( Math.min(compareNum,26) ) )+">"; bg_css="DEBUG_tooLong";     }
+
+				span_data1.classList.remove("DEBUG_clear");
+				span_data1.classList.remove("DEBUG_indeterminate");
+				span_data1.classList.remove("DEBUG_warning");
+				span_data1.classList.remove("DEBUG_minor");
+				span_data1.classList.remove("DEBUG_major");
+				span_data1.classList.remove("DEBUG_critical");
+				span_data1.classList.remove("DEBUG_tooLong");
+				span_data1.classList.add(bg_css);
+				span_data1.setAttribute("title", bg_css);
+
+				let avg_txt       = "AVG:" + (avg.toString()).padStart(7, " ") + " ms";
+				let compareNum_txt = ("("+org_compareNum+"%)").padStart(7, " ");
+				let level_txt = " " + level;
+
+				span_data1.innerText = "" +
+				"" + avg_txt        + "" +
+				"" + compareNum_txt + "" +
+				"" + level_txt      + "" +
+				""
+				;
+			}
+
+		}
 	},
 };
 
@@ -267,7 +379,7 @@ game.DEBUG.showIndividualLayers = function(){
 		for(let c=0; c<core.SETTINGS.layerDrawOrder.length; c+=1){
 			let layerName = core.SETTINGS.layerDrawOrder[c] ;
 			let canvas    = core.GRAPHICS.canvas[layerName] ;
-			let ctx       = core.GRAPHICS.ctx[layerName] ;
+			// let ctx       = core.GRAPHICS.ctx[layerName] ;
 			let VRAM_len;
 
 			if     (core.GRAPHICS.DATA.FLAGS[layerName].type=="VRAM")  {
@@ -294,6 +406,7 @@ game.DEBUG.showIndividualLayers = function(){
 
 			div2.innerText=layerName ;
 			span1.innerText=" (VRAM_len: "+VRAM_len+")";
+			// span1.innerText=" (VRAM_len: "+VRAM_len+", TS:"+Object.keys(_CGA.tilemaps['_textstrings']).length+")";
 			span1.classList.add("DEBUG_VRAM_len");
 
 			// let prev_lastUpdate = performance.now();
@@ -330,6 +443,12 @@ game.DEBUG.showIndividualLayers = function(){
 
 		// Update the canvas if the update times do not match.
 		if(prev_lastUpdate != lastUpdate){
+			if(_CGA.tilemaps._textstrings){
+				let numTextstrings  = Object.keys(_CGA.tilemaps._textstrings).length ;
+				let cnt_div = document.getElementById("DEBUG_layers_textstrings");
+				cnt_div.innerText=numTextstrings;
+			}
+
 			// Update VRAM_len.
 			let VRAM_len_div    = DEBUG_canvases[c].parentElement.querySelector(".DEBUG_VRAM_len");
 			let VRAM_len;
@@ -342,18 +461,18 @@ game.DEBUG.showIndividualLayers = function(){
 			}
 
 			VRAM_len_div.innerText = " (VRAM_len: "+VRAM_len+")";
+			// VRAM_len_div.innerText=" (VRAM_len: "+VRAM_len+", TS:"+Object.keys(_CGA.tilemaps['_textstrings']).length+")";
 
 			// Update the last update times.
 			lastUpdate_div.innerText="Last Update: " + lastUpdate;
 			lastUpdate_div.setAttribute( "prev_lastUpdate", lastUpdate );
-
 
 			// div2.innerText=layerName +"("+VRAM_len+")";
 
 			// Update the canvas.
 			let src_canvas      = core.GRAPHICS.canvas[layerName];
 			let dest_canvas     = DEBUG_canvases[c];
-			let dest_canvas_ctx = DEBUG_canvases[c].getContext("2d");
+			let dest_canvas_ctx = dest_canvas.getContext("2d");
 			dest_canvas_ctx.clearRect(0,0, src_canvas.width, src_canvas.height);
 			dest_canvas_ctx.drawImage(src_canvas, 0, 0);
 		}
@@ -366,23 +485,24 @@ game.DEBUG.showColorOnHover     = {
 	hasListeners : false,
 	colorTableDrawn : false,
 
+	// Accepts mousemove on the output canvas.
 	listener_mousemove : function(e){
 		// important: correct mouse position:
-		var rect = this.getBoundingClientRect();
+		let rect = this.getBoundingClientRect();
 		let x = Math.floor((e.clientX - rect.left) / (rect.right  - rect.left) * this.width ) ;
 		let y = Math.floor((e.clientY - rect.top)  / (rect.bottom - rect.top)  * this.height) ;
 
-		// var coord = "x=" + x + ", y=" + y;
-		var ctx   = this.getContext('2d');
-		var pixel = ctx.getImageData(x, y, 1, 1);
-		var tile  = ctx.getImageData(x, y, _CS.TILE_WIDTH*4, _CS.TILE_HEIGHT*4);
+		// let coord = "x=" + x + ", y=" + y;
+		let ctx   = this.getContext('2d');
+		let pixel = ctx.getImageData(x, y, 1, 1);
+		let tile  = ctx.getImageData(x, y, _CS.TILE_WIDTH*4, _CS.TILE_HEIGHT*4);
 		// let tile_canvas = document.createElement("canvas");
 
 		let key =
 			"#" +
-			(   (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() )
-			+ ( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() )
-			+ ( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
+			( (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() ) +
+			( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() ) +
+			( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
 			// + ( (pixel.data[3]).toString(16).padStart(2, "0").toUpperCase() )
 		;
 
@@ -390,14 +510,14 @@ game.DEBUG.showColorOnHover     = {
 		let data = {};
 		try{
 			data = {
-				"uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
+				// "uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
 				"uze_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_hex ,
-				"rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
+				// "rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
 				"r32_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].r32_hex ,
 			};
 		}
-		catch(e){
-			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key);
+		catch(ex){
+			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key, ex);
 			return;
 		}
 
@@ -422,14 +542,15 @@ game.DEBUG.showColorOnHover     = {
 
 		let str =
 		"<pre>" +
-		"DATA: " + JSON.stringify(data,null,1)
+		"DATA: " + JSON.stringify(data,null,1) +
 		"</pre>" + "" ;
 
 		debug_colorOutput.innerHTML = str;
 
 		// core.GRAPHICS.DATA.lookups.colors.r32_hex[key]
 	},
-	listener_mousedown1 : function(e){
+	// Accepts left-click on the output canvas.
+	listener_mousedown1 : function(){
 		// If the user clicks the output canvas then the currently highlighted pixel (should be displayed in the pixel canvas) will be "locked".
 
 		// When clicking on the canvas_OUTPUT.
@@ -439,14 +560,14 @@ game.DEBUG.showColorOnHover     = {
 		let dst_canvas = document.querySelector("#DEBUG_color_hover_preview_source_canvas1");
 		let dst_canvas_ctx = dst_canvas.getContext("2d");
 
-		var ctx   = src_canvas.getContext('2d');
-		var pixel = ctx.getImageData(0, 0, 1, 1);
+		let ctx   = src_canvas.getContext('2d');
+		let pixel = ctx.getImageData(0, 0, 1, 1);
 
 		let key =
 			"#" +
-			(   (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() )
-			+ ( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() )
-			+ ( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
+			( (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() ) +
+			( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() ) +
+			( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
 			// + ( (pixel.data[3]).toString(16).padStart(2, "0").toUpperCase() )
 		;
 
@@ -455,47 +576,54 @@ game.DEBUG.showColorOnHover     = {
 		let data = {};
 		try{
 			data = {
-				"uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
+				// "uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
 				"uze_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_hex ,
-				"rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
+				// "rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
 				"r32_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].r32_hex ,
 			};
 		}
-		catch(e){
-			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key);
+		catch(ex){
+			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key, ex);
 			return;
 		}
 
 		// Update the text info.
 		let str =
 		"<pre>" +
-		"DATA: " + JSON.stringify(data,null,1)
+		"DATA: " + JSON.stringify(data,null,1) +
 		"</pre>" + "" ;
 
-		let textinfo = document.getElementById("DEBUG_color_hover_preview_source_textinfo")
+		let textinfo = document.getElementById("DEBUG_color_hover_preview_source_textinfo");
 		textinfo.innerHTML=str;
 
 		// Draw canvas.
 		dst_canvas_ctx.drawImage(src_canvas,0,0);
 	},
+	// Accepts left-click on the palette canvases and right-click on the output canvas.
 	listener_mousedown2 : function(e){
 		// If the user clicks one of the destination canvases then the currently highlighted pixel (should be displayed in the pixel canvas) will be "locked".
+		let src_canvas ;
+		if     (this.id=="canvas_OUTPUT"){
+			src_canvas = document.getElementById("DEBUG_color_hover_preview_canvas2");
+			e.preventDefault();
+		}
+		else if( this.classList.contains("debug_colorOutput_tile_canvases") ){ src_canvas = this ; }
+		else   { return; }
 
 		// When clicking on destination color choices.
 
 		// Get canvas info.
-		let src_canvas = this;
 		let dst_canvas = document.querySelector("#DEBUG_color_hover_preview_destination_canvas1");
 		let dst_canvas_ctx = dst_canvas.getContext("2d");
 
-		var ctx   = src_canvas.getContext('2d');
-		var pixel = ctx.getImageData(0, 0, 1, 1);
+		let ctx   = src_canvas.getContext('2d');
+		let pixel = ctx.getImageData(0, 0, 1, 1);
 
 		let key =
 			"#" +
-			(   (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() )
-			+ ( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() )
-			+ ( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
+			( (pixel.data[0]).toString(16).padStart(2, "0").toUpperCase() ) +
+			( (pixel.data[1]).toString(16).padStart(2, "0").toUpperCase() ) +
+			( (pixel.data[2]).toString(16).padStart(2, "0").toUpperCase() )
 			// + ( (pixel.data[3]).toString(16).padStart(2, "0").toUpperCase() )
 		;
 
@@ -504,29 +632,30 @@ game.DEBUG.showColorOnHover     = {
 		let data = {};
 		try{
 			data = {
-				"uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
+				// "uze_dec" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_dec ,
 				"uze_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_hex ,
-				"rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
+				// "rgba"    : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].rgba    ,
 				"r32_hex" : core.GRAPHICS.DATA.lookups.colors.r32_hex[key].r32_hex ,
 			};
 		}
-		catch(e){
-			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key);
+		catch(ex){
+			// console.log("----", core.GRAPHICS.DATA.lookups.colors.r32_hex[key], key, ex);
 			return;
 		}
 
 		// Update the text info.
 		let str =
 		"<pre>" +
-		"DATA: " + JSON.stringify(data,null,1)
+		"DATA: " + JSON.stringify(data,null,1) +
 		"</pre>" + "" ;
 
-		let textinfo = document.getElementById("DEBUG_color_hover_preview_destination_textinfo")
+		let textinfo = document.getElementById("DEBUG_color_hover_preview_destination_textinfo");
 		textinfo.innerHTML=str;
 
 		// Draw canvas.
 		dst_canvas_ctx.drawImage(src_canvas,0,0);
 	},
+	// Add all required listeners.
 	add_listeners    : function(){
 		// Set the hasListeners flag.
 		game.DEBUG.showColorOnHover.hasListeners=true;
@@ -551,12 +680,12 @@ game.DEBUG.showColorOnHover     = {
 
 					let uze_hex = core.GRAPHICS.DATA.lookups.colors.r32_hex[key].uze_hex;
 
-					canvas=document.createElement("canvas");
+					let canvas=document.createElement("canvas");
 					canvas.classList.add("debug_colorOutput_tile_canvases");
 					canvas.setAttribute("title", "RGB HEX: " + key + ", uze_hex: "+ uze_hex);
 					canvas.width  = core.SETTINGS.TILE_WIDTH;
 					canvas.height = core.SETTINGS.TILE_HEIGHT;
-					ctx=canvas.getContext("2d");
+					let ctx=canvas.getContext("2d");
 					ctx.fillStyle = key;
 					ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -576,7 +705,10 @@ game.DEBUG.showColorOnHover     = {
 		core.GRAPHICS.canvas.OUTPUT.addEventListener("mousemove", game.DEBUG.showColorOnHover.listener_mousemove, false);
 
 		// Add the mousedown listener. (canvas_OUTPUT)
-		core.GRAPHICS.canvas.OUTPUT.addEventListener("mousedown", game.DEBUG.showColorOnHover.listener_mousedown1, false);
+		core.GRAPHICS.canvas.OUTPUT.addEventListener("mousedown"  , game.DEBUG.showColorOnHover.listener_mousedown1, false);
+
+		// Add the contextmenu listener. (canvas_OUTPUT)
+		core.GRAPHICS.canvas.OUTPUT.addEventListener("contextmenu", game.DEBUG.showColorOnHover.listener_mousedown2, false);
 
 		// Add the mousedown listener for all the .debug_colorOutput_tile_canvases .
 		let canvases = document.querySelectorAll(".debug_colorOutput_tile_canvases");
@@ -585,6 +717,7 @@ game.DEBUG.showColorOnHover     = {
 			canvas.addEventListener("mousedown", game.DEBUG.showColorOnHover.listener_mousedown2, false);
 		}
 	},
+	// Remove all required listeners.
 	remove_listeners : function(){
 		// Clear the hasListeners flag.
 		game.DEBUG.showColorOnHover.hasListeners=false;
@@ -595,6 +728,9 @@ game.DEBUG.showColorOnHover     = {
 		// Remove the mousedown listener. (canvas_OUTPUT)
 		core.GRAPHICS.canvas.OUTPUT.removeEventListener("mousedown", game.DEBUG.showColorOnHover.listener_mousedown1, false);
 
+		// Remove the contextmenu listener. (canvas_OUTPUT)
+		core.GRAPHICS.canvas.OUTPUT.removeEventListener("contextmenu", game.DEBUG.showColorOnHover.listener_mousedown2, false);
+
 		// Remove the mousedown listener for all the .debug_colorOutput_tile_canvases .
 		let canvases = document.querySelectorAll(".debug_colorOutput_tile_canvases");
 		for(let i=0; i<canvases.length; i+=1){
@@ -602,15 +738,7 @@ game.DEBUG.showColorOnHover     = {
 			canvas.removeEventListener("mousedown", game.DEBUG.showColorOnHover.listener_mousedown2, false);
 		}
 	},
-
-	// },
-	// function(){
-	// 	// core.GRAPHICS.DATA.lookups.colors.r332
-	// 	// core.GRAPHICS.DATA.lookups.colors.r32
-	// 	// http://jsfiddle.net/DV9Bw/1/
-
 };
-
 
 // Called periodically to update the displayed debug information.
 game.DEBUG.updateDebugDisplay = function(){
@@ -618,20 +746,20 @@ game.DEBUG.updateDebugDisplay = function(){
 	game.DEBUG.updateDebugDisplay_funcs.layerDataInfo();
 
 	// START
-	if(game.DEBUG.DOM["DEBUG_MENU_DIV_0"].classList.contains("active")){
-	}
+	// if(game.DEBUG.DOM.DEBUG_MENU_DIV_0.classList.contains("active")){
+	// }
 
 	// CORE
-	if(game.DEBUG.DOM["DEBUG_MENU_DIV_1"].classList.contains("active")){
-	}
+	// if(game.DEBUG.DOM.DEBUG_MENU_DIV_1.classList.contains("active")){
+	// }
 
 	// LAYERS
-	if(game.DEBUG.DOM["DEBUG_MENU_DIV_2"].classList.contains("active")){
+	if(game.DEBUG.DOM.DEBUG_MENU_DIV_2.classList.contains("active")){
 		game.DEBUG.showIndividualLayers();
 	}
 
 	// COLOR SELECTOR
-	if(game.DEBUG.DOM["DEBUG_MENU_DIV_3"].classList.contains("active")){
+	if(game.DEBUG.DOM.DEBUG_MENU_DIV_3.classList.contains("active")){
 		// Add the listener if it is not there.
 		if(!game.DEBUG.showColorOnHover.hasListeners){
 			console.log("Adding listeners for: showColorOnHover...");
@@ -644,10 +772,91 @@ game.DEBUG.updateDebugDisplay = function(){
 		game.DEBUG.showColorOnHover.remove_listeners();
 	}
 
+	// VARS output.
+	if(game.DEBUG.DOM.DEBUG_MENU_DIV_4.classList.contains("active")){
+		// Key name (Output to dev console if clicked.)
+		// Data (no wrap.
+		// game.gs[game.gamestate];
+		// game.gamestate;
+		// Object.keys(game.gs[game.gamestate])
+
+		// let keys;
+		// let gs_key;
+		// if     (game.gamestate=="TESTS1"){ gs_key="TESTS1"; keys=["vars", ]; }
+		// else if(game.gamestate=="TESTS2"){ gs_key="TESTS2"; keys=["vars", "subMains"]; }
+		// else                             { return; }
+
+		// let str = "\nGAMESTATE: " + game.gamestate + "\n";
+
+		// let fields = JSON.parse(JSON.stringify(game.gs[gs_key]));
+
+		// keys.forEach(function(key){
+		// 	let thisData     = game.gs[gs_key][key];
+		// 	let thisDataKeys = Object.keys(thisData);
+
+		// 	let key_txt = (key+":");
+		// 	str += " " + key_txt + "\n";
+
+		// 	thisDataKeys.forEach(function(d_key){
+		// 		let innerData = JSON.stringify( thisData[d_key] );
+
+		// 		let innerKeys = [];
+		// 		try{ innerKeys = Object.keys(innerData); } catch(e){ innerKeys = [];}
+
+		// 		innerKeys.forEach(function(d){
+		// 			let innerkey = innerKeys[d].padEnd(20, " ");
+		// 			str += innerkey+" ::: "+JSON.stringify(thisData[d_key],null,0) + "\n";
+		// 		});
+
+		// 		// let d_key_txt = (d_key+":");
+		// 		// str += "   " + ""+d_key_txt+":" +"\n"+ "    " + innerData + "\n\n";
+		// 	});
+		// });
+		// console.log(str + "\n");
+		// throw "test";
+
+		// // fields.forEach(function(d){
+		// // 	let type = typeof game.gs[gs_key][d];
+		// // 	console.log("---", d, type);
+		// // });
+
+		// let elem = document.getElementById("DEBUG_vars_textarea");
+		// elem.innerText = str;
+	}
+
 	// Update the debug_updateIndicator
-	debug_updateIndicator=document.getElementById("debug_updateIndicator");
+	let debug_updateIndicator=document.getElementById("debug_updateIndicator");
 	if     (debug_updateIndicator.innerText=="!"){ debug_updateIndicator.innerText="."; }
 	else if(debug_updateIndicator.innerText=="."){ debug_updateIndicator.innerText="!"; }
-}
+};
 
+//
+game.DEBUG.shakeTest = function(){
+	let list = [
+
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
+
+	];
+	// let index=0;
+	let delay=50;
+
+	// for(let r=0; r<10; r+=1){
+		for(let i=0; i<list.length; i+=1){
+			setTimeout(function(){
+				_CGF.adjustOutputOffsets( list[i][0], list[i][1]);
+			}, (delay*i));
+		}
+	// }
+};
 // *** GAME-SPECIFIC DEBUG TESTS ***

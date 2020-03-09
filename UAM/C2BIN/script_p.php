@@ -24,6 +24,7 @@ $regex = [
 	[ '/\r\n/'                             , "\n"   ] , // Normalize to Unix line endings.
 	[ '/^\s*[\r\n]/m'                      , ""     ] , // Blank lines.
 	[ '/const char/m'                      , ""     ] , // Remove const char
+	[ '/const int/m'                       , ""     ] , // Remove const int
 	[ '/PROGMEM/m'                         , ""     ] , // Remove PROGMEM
 	[ '/(\/\*([\s\S]*?)\*\/)|(\/\/(.*)$)/m', ""     ] , // Single and Multi-line comments.
 	[ '/\s*[#;].+$/m'                      , ""     ] , // Hash and Comma comments.

@@ -1,3 +1,5 @@
+'use strict';
+
 // *** SHARED GAME VARIABLES ***
 
 // Will hold each individual game state.
@@ -17,7 +19,9 @@ game.gamestate2      = "" ; //
 game.gamestate2_prev = "" ; //
 
 // Keeps track of the logic processing timings. (For DEBUG mode.)
-game.logic_timings = [0,0,0,0,0];
+// _CGP.gameloop_timings = []; // Handled by game.
+// _CGP.logic_timings    = []; // Handled by game.
+// _CGP.debug_timings    = []; // Handled by game.
 
 // Whole image graphics processor(s).
 game.graphicsPostProcessor_obj = {
@@ -27,13 +31,13 @@ game.graphicsPostProcessor_obj = {
 			return new Promise(function(res,rej){ res(); });
 		},
 	}
-}
+};
 game.graphicsPostProcessor = function(ctx){
 	return new Promise(function(res, rej){
 		let proms=[];
 
 		// Shake?
-		if(game.graphicsPostProcessor_obj["shake"]["active"]){ proms.push( game.graphicsPostProcessor_obj.shake.main() ); }
+		if(game.graphicsPostProcessor_obj.shake.active){ proms.push( game.graphicsPostProcessor_obj.shake.main() ); }
 
 		Promise.all(proms).then(
 			function(){ res(ctx); },
@@ -61,8 +65,8 @@ game.extraDataForGlobalErrorHandler = function(){
 	catch(e){ vars = "<UNAVAILABLE>"; }
 
 	let extraData = {};
-	extraData["_gamestateDataOnly"] = gamestateDataOnly ;
-	extraData["_vars"] = vars ;
+	extraData._gamestateDataOnly = gamestateDataOnly ;
+	extraData._vars = vars ;
 	if( game.gamestate       ){ extraData["game.gamestate"]       = game.gamestate      ; }
 	if( game.gamestate_prev  ){ extraData["game.gamestate_prev"]  = game.gamestate_prev ; }
 	if( game.gamestate2      ){ extraData["game.gamestate2"]      = game.gamestate2     ; }
@@ -77,12 +81,16 @@ game.runOnce = function(){
 		let proms1 = [];
 
 		// Graphics and audio setup.
-		proms1.push( core.GRAPHICS   .init() ) ; // Comes from the selected video kernel.
+		proms1.push( core.GRAPHICS   .init.init() ) ; // Comes from the selected video kernel.
 		proms1.push( core.FUNCS.audio.init() ) ; // Comes from the selected sound kernel.
 
 		// When the above promises have been completed...
 		Promise.all(proms1).then(
 			function(){
+				// _CGP.gameloop_timings = []; // Handled by game.
+				// _CGP.logic_timings    = []; // Handled by game.
+				// _CGP.debug_timings    = []; // Handled by game.
+
 				// Populate the SHARED data for the game.
 				game.SHARED.populate();
 
@@ -102,16 +110,31 @@ game.runOnce = function(){
 					game.DEBUG.init();
 				}
 
+				core.GRAPHICS.DEBUG.start("gameloop_timings"); core.GRAPHICS.DEBUG.end("gameloop_timings");
+				core.GRAPHICS.DEBUG.start("logic_timings"   ); core.GRAPHICS.DEBUG.end("logic_timings"   );
+				core.GRAPHICS.DEBUG.start("debug_timings"   ); core.GRAPHICS.DEBUG.end("debug_timings"   );
+				core.GRAPHICS.DEBUG.start("gfx_timings"     ); core.GRAPHICS.DEBUG.end("gfx_timings"     );
+				core.GRAPHICS.DEBUG.start("doColorSwapping" ); core.GRAPHICS.DEBUG.end("doColorSwapping" );
+				core.GRAPHICS.DEBUG.start("update_layers"   ); core.GRAPHICS.DEBUG.end("update_layers"   );
+				core.GRAPHICS.DEBUG.start("layer_combines"  ); core.GRAPHICS.DEBUG.end("layer_combines"  );
+				core.GRAPHICS.DEBUG.start("fade_timings"    ); core.GRAPHICS.DEBUG.end("fade_timings"    );
+				core.GRAPHICS.DEBUG.start("output_timings"  ); core.GRAPHICS.DEBUG.end("output_timings"  );
+
+				core.GRAPHICS.DEBUG.start("layer_BG1"       ); core.GRAPHICS.DEBUG.end("layer_BG1"       );
+				core.GRAPHICS.DEBUG.start("layer_BG2"       ); core.GRAPHICS.DEBUG.end("layer_BG2"       );
+				core.GRAPHICS.DEBUG.start("layer_TEXT"      ); core.GRAPHICS.DEBUG.end("layer_TEXT"      );
+				core.GRAPHICS.DEBUG.start("layer_SP1"       ); core.GRAPHICS.DEBUG.end("layer_SP1"       );
+
 				// Remove some assets (only needed once.)
-				// delete core.GRAPHICS   .init ; // Graphics init should only run once.
-				// delete core.FUNCS.audio.init ; // Audio init should only run once.
-				// delete game.SHARED.populate  ; // Only needed once.
-				// delete game.runOnce          ; // This function.
+				delete core.GRAPHICS   .init ; // Graphics init should only run once.
+				delete core.FUNCS.audio.init ; // Audio init should only run once.
+				delete game.SHARED.populate  ; // Only needed once.
+				delete game.runOnce          ; // This function.
 
 				// Resolve the promise and allow the program to continue.
 				resolve();
-			}
-			,function(err){ console.log("ERROR: runOnce: ", err);  }
+			},
+			function(err){ console.log("ERROR: runOnce: ", err);  }
 		);
 
 	});
@@ -125,8 +148,8 @@ game.firstLoop = function(){
 
 		// *** Adjust game canvas dimensions ***
 
-		JSGAME.DOM["canvasScaleSlider"].value = JSGAME.PRELOAD.gamesettings_json.canvas_scaleFactor;
-		JSGAME.SHARED.canvasResize( JSGAME.DOM["canvasScaleSlider"].value );
+		JSGAME.DOM.canvasScaleSlider.value = JSGAME.PRELOAD.gamesettings_json.canvas_scaleFactor;
+		JSGAME.SHARED.canvasResize( JSGAME.DOM.canvasScaleSlider.value );
 
 		// *** Aliases for JSGAME.SHARED functions ***
 
@@ -166,11 +189,16 @@ game.firstLoop = function(){
 		// CLEAR ALL CANVASES AND GRAPHICS ARRAYS.
 		//
 
+		if(JSGAME.FLAGS.debug){
+			// document.getElementById("debug_updateIndicator2").innerText = (JSGAME.SHARED.timing.interval.toFixed(2)) + " ms/frame";
+			// document.getElementById("debug_updateIndicator3").innerText = "SET FPS: " + (core.SETTINGS.FPS) + " FPS";
+		}
+
 		// Resolve this since we are done.
 		setTimeout(
 			function(){
 				// Blank the screen.
-				let outputCanvasCtx = core.GRAPHICS["ctx"].OUTPUT;
+				let outputCanvasCtx = core.GRAPHICS.ctx.OUTPUT;
 				outputCanvasCtx.fillStyle = "#000";
 				outputCanvasCtx.fillRect(0, 0, outputCanvasCtx.canvas.width, outputCanvasCtx.canvas.height);
 
@@ -187,14 +215,16 @@ game.firstLoop = function(){
 
 						// *** GAMESTATE ***
 
+						// Normal non-debug load.
 						if(!JSGAME.FLAGS.debug){
 							// game.setGamestate1("TITLE0" , true); // Init screen
-							game.setGamestate1("TESTS1" , true); //
-							// game.setGamestate1("TESTS2" , true); //
+							// game.setGamestate1("TESTS1" , true); //
+							game.setGamestate1("TESTS2" , true); //
 						}
+						// Debug is active.
 						else{
-							// game.setGamestate1("TESTS2" , true); //
-							game.setGamestate1("TESTS1" , true); //
+							// game.setGamestate1("TESTS1" , true); //
+							game.setGamestate1("TESTS2" , true); //
 							// game.setGamestate1("TESTS"  , true); //
 							// game.setGamestate1("TITLE0" , true); // Init screen
 							// game.setGamestate1("TITLE1" , true); //
@@ -216,12 +246,15 @@ game.firstLoop = function(){
 
 // Updates game.gamestate and game.gamestate_prev.
 game.setGamestate1 = function(newState, prepare){
+	// NOTE: prepareState is normally used to reset variables in a gamestate.
+	// However, if those variables were not created within prepareState then they would not be reset.
+
 	// Stop whatever might be running.
-	window.cancelAnimationFrame( JSGAME.SHARED.raf_id );
-	JSGAME.SHARED.raf_id=null;
+	JSGAME.SHARED.cancel_gameloop();
 
 	// Start it again.
-	JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
+	// JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
+	JSGAME.SHARED.schedule_gameloop();
 
 	// Save previous gamestate1
 	game.gamestate_prev  = game.gamestate ;
@@ -234,14 +267,14 @@ game.setGamestate1 = function(newState, prepare){
 		game.gs[game.gamestate].prepareState();
 	}
 };
-// Updates game.gamestate2 and game.gamestate2_prev.
+// Updates game.gamestate2 and game.gamestate2_prev. (UNUSED)
 game.setGamestate2 = function(newState, prepare){
 	// Stop whatever might be running.
-	window.cancelAnimationFrame( JSGAME.SHARED.raf_id );
-	JSGAME.SHARED.raf_id=null;
+	JSGAME.SHARED.cancel_gameloop();
 
 	// Start it again.
-	JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
+	// JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
+	JSGAME.SHARED.schedule_gameloop();
 
 	// Save previous gamestate1
 	game.gamestate2_prev = game.gamestate2 ;
@@ -257,11 +290,10 @@ game.setGamestate2 = function(newState, prepare){
 // Run prepareState on all gamestates then run the firstLoop again.
 game.game_full_restart = function(){
 	// Stop whatever might be running.
-	window.cancelAnimationFrame( JSGAME.SHARED.raf_id );
-	JSGAME.SHARED.raf_id=null;
+	JSGAME.SHARED.cancel_gameloop();
 
 	// Blank the screen.
-	let outputCanvasCtx = core.GRAPHICS["ctx"].OUTPUT;
+	let outputCanvasCtx = core.GRAPHICS.ctx.OUTPUT;
 	outputCanvasCtx.fillStyle = "#BB3";
 	outputCanvasCtx.fillRect(0, 0, outputCanvasCtx.canvas.width, outputCanvasCtx.canvas.height);
 
@@ -287,146 +319,9 @@ game.game_full_restart = function(){
 // *** LOW-LEVEL GAME FUNCTIONS ***
 
 //
-game.loop = function(){
-	// Should the gameloop run or be skipped?
-	if(
-
-		  // JSGAME flags:
-		JSGAME.FLAGS.gameReady         && // Game is ready.
-		JSGAME.FLAGS.windowIsFocused   && // Window in focus?
-		! JSGAME.FLAGS.paused          && // Game NOT paused? (Automatic.)
-		! JSGAME.FLAGS.manuallyPaused  && // Game NOT paused? (By user.)
-
-		// Specific to the video mode:
-		//   ! core.GRAPHICS.FADER.blocking       && // Fader NOT set to block?
-		//   ! core.GRAPHICS.FADER.blockAfterFade && // Fade done but set to block logic?
-		  ! core.GRAPHICS.DATA.INLAYERUPDATE      // Not in a graphics update?
-	){
-		// *** Get inputs ***
-
-		// Debug: Performance check.
-		let logic_start;
-		if(JSGAME.FLAGS.debug) { logic_start = performance.now(); }
-
-		// JSGAME.SHARED.getUserInputs( game.buttons );
-		JSGAME.SHARED.getUserInputs();
-
-		// *** Run the current game state. ***
-
-		game.stateManager();
-
-		// Debug: Performance check.
-		if(JSGAME.FLAGS.debug) { game.logic_timings.shift(); game.logic_timings.push(performance.now() - logic_start);       }
-	}
-	else{
-		// Game logic is paused.
-		//
-
-		// Make sure that the game loop cannot run again until this finishes.
-		// window.cancelAnimationFrame( JSGAME.SHARED.raf_id );
-		// JSGAME.SHARED.raf_id=null;
-
-		// Start the gameloop again.
-		// JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
-	}
-
-	// *** Output any graphical changes to the canvas. ***
-
-	// Make sure that the game loop cannot run again until this finishes.
-	window.cancelAnimationFrame( JSGAME.SHARED.raf_id );
-	JSGAME.SHARED.raf_id=null;
-
-	core.GRAPHICS.FUNCS.runTileFlagChangesQueue().then(
-		function(res){
-			core.GRAPHICS.FUNCS.update_allLayers().then(
-				function(res){
-					// Start the gameloop again.
-					JSGAME.SHARED.raf_id=requestAnimationFrame(game.gameloop);
-
-					// Set JSGAME.FLAGS.allowDebugToRun if in DEBUG mode.
-					if(JSGAME.FLAGS.debug) { JSGAME.FLAGS.allowDebugToRun=true ; }
-					else                   { JSGAME.FLAGS.allowDebugToRun=false; }
-				},
-				function(err){
-					let str=["=E= game.loop/update_allLayers: ERROR" ];
-					console.log(str,err);
-					throw Error(str);
-				}
-			);
-		},
-		function(err){ console.log("err:", err); }
-
-	);
-};
-//
-game.gameloop = function(timestamp){
-	// *** Update the timing data. ***
-
-	// JSGAME.SHARED.timing.now   = performance.now();
-	JSGAME.SHARED.timing.now   = timestamp;
-	JSGAME.SHARED.timing.delta = JSGAME.SHARED.timing.now - JSGAME.SHARED.timing._then;
-
-	// *** Does the gameloop run this time? ***
-
-	if (JSGAME.SHARED.timing.delta >= JSGAME.SHARED.timing.interval) {
-
-		// *** Update the timing data. ***
-		JSGAME.SHARED.timing._then = JSGAME.SHARED.timing.now - (JSGAME.SHARED.timing.delta % JSGAME.SHARED.timing.interval);
-
-		// *** Update the effective average framerate. (Can be displayed to the user/debug.) ***
-		JSGAME.SHARED.fps.tick();
-
-		// *** Update the logic and graphics states.
-		// try{
-			game.loop();
-		// }
-		// catch(e){
-			// let str = ["=E= gameloop: Error in game.loop: ", game.gamestate, e ];
-			// console.log(str, game.gamestate, e);
-			// throw Error(str);
-		// }
-	}
-	else{
-		// *** DEBUG ***
-
-		// Allow the DEBUG loop if JSGAME.FLAGS.allowDebugToRun is set.
-		if(JSGAME.FLAGS.allowDebugToRun){
-			// Control how often the debug display is updated.
-			// NOTE: Time includes the last frame drawn.
-			let last                       = game.DEBUG.VALS.lastDebugDisplay           ;
-			let timeSince                  = performance.now() - last                   ;
-			let secondsToWait_debugDisplay = game.DEBUG.VALS.secondsToWait_debugDisplay ;
-
-			// Update the debug display?
-			if(timeSince >= (JSGAME.SHARED.timing.interval * core.SETTINGS.fps) * secondsToWait_debugDisplay ){
-				// Run the debug display.
-				// try{
-					game.DEBUG.updateDebugDisplay();
-					game.DEBUG.VALS.lastDebugDisplay=performance.now();
-				// }
-				// catch(e){
-					// let str = ["=E= gameloop: Error in updateDebugDisplay: ", game.gamestate, e ];
-					// console.log(str, game.gamestate, e);
-					// throw Error(str);
-				// }
-
-				// Clear allowDebugToRun. It will be set again after update_allLayers completes.
-				JSGAME.FLAGS.allowDebugToRun=false;
-			}
-		}
-
-		// *** Networking ***
-		//
-
-		// *** Game loop. (Run this function again.) ***
-		JSGAME.SHARED.raf_id = requestAnimationFrame( game.gameloop );
-	}
-
-};
-//
 game.stateManager = function(){
 	// Run the main function for the gamestate (if it exists.)
-	if(game.gs[game.gamestate]){ game.gs[game.gamestate].main(); }
+	if( game.gs[game.gamestate] ){ game.gs[game.gamestate].main(); }
 
 	// Error!
 	else{
@@ -436,3 +331,162 @@ game.stateManager = function(){
 	}
 };
 
+// The actual gameloop.
+game.loop = function(){
+	return new Promise(async function(res_loop, rej_loop){
+		// ********
+		// GAMELOOP
+		// ********
+
+		core.GRAPHICS.DEBUG.start("gameloop_timings");
+
+		// ***************
+		// GRAPHICS RENDER
+		// ***************
+
+		try{ await _CGFU.renderOutput(); } catch(e){ _CGFI.errorHandler("renderOutput", e); }
+
+		// *****
+		// LOGIC
+		// *****
+
+		core.GRAPHICS.DEBUG.start("logic_timings"   );
+
+		// Get user inputs.
+		JSGAME.SHARED.getUserInputs();
+
+		// Run game logic.
+		game.stateManager();
+
+		// ***************
+		// GRAPHICS UPDATE
+		// ***************
+
+		// Layer updates.
+		try{ await _CGFI.update_layers(); } catch(e){ _CGFI.errorHandler("update_layers", e); }
+
+		core.GRAPHICS.DEBUG.end("logic_timings"   );
+		core.GRAPHICS.DEBUG.end("gameloop_timings");
+
+		res_loop();
+
+		// **** **** ****
+		// **** DONE ****
+		// **** **** ****
+
+		// ... Ready for the draw at the beginning of the loop.
+	});
+
+};
+
+// Controls the gameloop.
+game.gameloop = async function(timestamp){
+	// Control if the actual game loop should run.
+
+	// Gather some data to be displayed by the next debug update.
+	if(JSGAME.FLAGS.debug) {
+		if(!game.DEBUG.lastloopTimings){ game.DEBUG.lastloopTimings={}; }
+		game.DEBUG.lastloopTimings.interval = JSGAME.SHARED.timing.interval                                             ;
+		game.DEBUG.lastloopTimings.time     = timestamp - JSGAME.SHARED.timing._then                                    ;
+		game.DEBUG.lastloopTimings.percent  = ((game.DEBUG.lastloopTimings.time) / JSGAME.SHARED.timing.interval) * 100 ;
+		game.DEBUG.lastloopTimings.calcFPS  = JSGAME.SHARED.fps.value                                                   ;
+		game.DEBUG.lastloopTimings.setFPS   = core.SETTINGS.FPS;
+	}
+
+	// Update the timing values.
+	JSGAME.SHARED.timing.now           = timestamp;
+	JSGAME.SHARED.timing.delta         = JSGAME.SHARED.timing.now - JSGAME.SHARED.timing._then;
+	JSGAME.SHARED.timing.nextFrameTime = JSGAME.SHARED.timing.now + JSGAME.SHARED.timing.interval ;
+
+	// Ready to run a graphics/logic update?
+	let is_deltaOverInterval = (JSGAME.SHARED.timing.delta >= JSGAME.SHARED.timing.interval ? true : false) ;
+	let is_paused            = !(JSGAME.FLAGS.gameReady && JSGAME.FLAGS.windowIsFocused && ! JSGAME.FLAGS.paused && ! JSGAME.FLAGS.manuallyPaused) ;
+
+	if(is_deltaOverInterval) {
+		// Update the timing data.
+		JSGAME.SHARED.timing._then = JSGAME.SHARED.timing.now - (JSGAME.SHARED.timing.delta % JSGAME.SHARED.timing.interval);
+
+		// Calculate the average FPS.
+		JSGAME.SHARED.fps.tick(timestamp);
+
+		// Paused? Do not run the game.loop.
+		if(is_paused){
+			// Schedule the next game.gameloop.
+			JSGAME.SHARED.schedule_gameloop();
+		}
+
+		// Run the gameloop.
+		else{
+			try { await game.loop(); }
+			catch(err){
+				let str=["=E= game.loop: ERROR", err ];
+				console.log(str,err);
+				throw Error(str);
+			}
+
+			// Set JSGAME.FLAGS.allowDebugToRun if in DEBUG mode.
+			if(JSGAME.FLAGS.debug) { JSGAME.FLAGS.allowDebugToRun=true ; }
+			else                   { JSGAME.FLAGS.allowDebugToRun=false; }
+
+			// Schedule the next game.gameloop.
+
+			// If the loop took too long then wait one frame before running again.
+			// let looptime = (JSGAME.SHARED.timing.nextFrameTime - performance.now()) ;
+			// if( Math.sign(looptime) == -1) {
+				// console.log("loop too long! looptime:", looptime);
+				// setTimeout(JSGAME.SHARED.schedule_gameloop, (JSGAME.SHARED.timing.interval*30) << 0 );
+			// }
+			// Do the requestAnimationFrame normally.
+			// else{ JSGAME.SHARED.schedule_gameloop(); }
+
+			JSGAME.SHARED.schedule_gameloop();
+		}
+	}
+
+	// Not ready yet. Do something else.
+	else{
+		if(JSGAME.FLAGS.debug && JSGAME.FLAGS.allowDebugToRun){
+			// Control how often the debug display is updated.
+			// NOTE: Time includes the last frame drawn.
+			let last                       = game.DEBUG.VALS.lastDebugDisplay           ;
+			let timeSince                  = performance.now() - last                   ;
+			let secondsToWait_debugDisplay = game.DEBUG.VALS.secondsToWait_debugDisplay ;
+
+			// Update the debug display?
+
+			// Update based on the specified timing.
+			if( timeSince >= (JSGAME.SHARED.timing.interval * core.SETTINGS.fps) * secondsToWait_debugDisplay ){
+				core.GRAPHICS.DEBUG.start("debug_timings");
+
+				// Run the debug display.
+				game.DEBUG.updateDebugDisplay();
+				game.DEBUG.VALS.lastDebugDisplay=performance.now();
+
+				// Clear allowDebugToRun. It will be set again after graphicsUpdate completes.
+				JSGAME.FLAGS.allowDebugToRun=false;
+
+				core.GRAPHICS.DEBUG.end("debug_timings");
+			}
+
+
+			// Schedule the next game.gameloop.
+			JSGAME.SHARED.schedule_gameloop();
+		}
+		else{
+			// Schedule the next game.gameloop.
+			JSGAME.SHARED.schedule_gameloop();
+		}
+
+	}
+
+};
+
+/*
+	full screen fade.
+
+	logic
+
+	color swaps
+
+	draw.
+*/

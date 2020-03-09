@@ -1,23 +1,23 @@
 <div id="DEBUG_DIV" class="noSelect hidden">
 	<!-- DEBUG NAVIGATION -->
 	<div id="DEBUG_DIV_MENU">
+		<div id="debug_updateIndicator">!</div>
+		<!-- <div id="debug_updateIndicator2"></div> -->
+		<!-- <div id="debug_updateIndicator3"></div> -->
+		<!-- <div id="debug_updateIndicator4"></div> -->
+		<div id="debug_updateIndicator5"></div>
+
+		<!-- <br> -->
+
 		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_0',this);">START</div>
 		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_1',this);">CORE</div>
 		<div class="debugPanelButtons active" onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_2',this);">LAYERS</div>
 		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_3',this);">COLORS</div>
+		<div class="debugPanelButtons"        onclick="game.DEBUG.NAV.debug_showPanel('DEBUG_MENU_DIV_4',this);">VARS</div>
 
-		<div id="debug_updateIndicator">!</div>
-		<div id="debug_updateIndicator2"></div>
-		<div id="debug_updateIndicator3"></div>
 	</div>
 
 	<div id="DEBUG_performance_table1">
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
 	</div>
 
 	<table class="debugTable1">
@@ -68,16 +68,59 @@
 			</div>
 
 			<div id="DEBUG_misc">
-				<button onclick="_CGF.ClearSprites();"    >ClearSprites()</button>
-				<button onclick="_CGF.ClearVram();"       >ClearVram()</button>
-				<button onclick="_CGF.clearAllCanvases();">clearAllCanvases()</button>
+				CLEAR TESTS:<br>
+				<button onclick="_CGFU.ClearSprites();"    >ClearSprites()</button>
+				<button onclick="_CGFU.ClearVram();"       >ClearVram()</button>
+				<button onclick="_CGFU.clearAllCanvases();">clearAllCanvases()</button>
+				<br>
+
+				<br>
+
+				CHAIN FADE TESTS:<br>
+				<button onclick="_CGFU.chainFade('UP'  , 20);">Fade UP (20)</button>
+				<button onclick="_CGFU.chainFade('UP'  , 40);">Fade UP (40)</button>
+				<button onclick="_CGFU.chainFade('UP'  , 60);">Fade UP (60)</button>
+				<button onclick="_CGFU.chainFade('UP'  , 80);">Fade UP (80)</button>
+				<br>
+
+				<button onclick="_CGFU.chainFade('DOWN', 20);">Fade DN (20)</button>
+				<button onclick="_CGFU.chainFade('DOWN', 40);">Fade DN (40)</button>
+				<button onclick="_CGFU.chainFade('DOWN', 60);">Fade DN (60)</button>
+				<button onclick="_CGFU.chainFade('DOWN', 80);">Fade DN (80)</button>
+				<br>
+
+				<br>
+
+				SET FADE TESTS:<br>
+				<button onclick="_CGFU.setFade(0 );">Fade OFF (All black)</button>
+				<br>
+				<button onclick="_CGFU.setFade(1 );">setFade(1 )</button>
+				<button onclick="_CGFU.setFade(2 );">setFade(2 )</button>
+				<button onclick="_CGFU.setFade(3 );">setFade(3 )</button>
+				<button onclick="_CGFU.setFade(4 );">setFade(4 )</button>
+				<button onclick="_CGFU.setFade(5 );">setFade(5 )</button>
+				<button onclick="_CGFU.setFade(6 );">setFade(6 )</button>
+				<button onclick="_CGFU.setFade(7 );">setFade(7 )</button>
+				<button onclick="_CGFU.setFade(8 );">setFade(8 )</button>
+				<button onclick="_CGFU.setFade(9 );">setFade(9 )</button>
+				<br>
+				<button onclick="_CGFU.setFade(10);">Fade OFF (Full color)</button>
+				<br>
+
+
+				<!-- <button onclick="_CGFU.setFade(11);">setFade(11)</button>
+				<button onclick="_CGFU.setFade(12);">setFade(12)</button>
+				<button onclick="_CGFU.setFade(13);">setFade(13)</button> -->
+				<br>
+				<br>
+
 			</div>
 
 		</div>
 
 		<!-- LAYERS -->
 		<div id="DEBUG_MENU_DIV_2" class="DEBUG_DIV_MENU_DIVS active">
-			<br>LAYERS<br>
+			<br>LAYERS (<span id="DEBUG_layers_textstrings" onclick="console.log('_textstrings: ', core.GRAPHICS.ASSETS.tilemaps._textstrings);">0</span> textmaps)<br>
 
 			<div id="DEBUG_LAYERS_table1" init="false">
 			</div>
@@ -157,7 +200,9 @@
 
 		</div>
 
-		<!-- DEBUG_performance_table -->
+		<div id="DEBUG_MENU_DIV_4" class="DEBUG_DIV_MENU_DIVS">
+			<textarea contenteditable="false" spellcheck="false" readonly id="DEBUG_vars_textarea"></textarea>
+		</div>
 	</div>
 
 </div>
