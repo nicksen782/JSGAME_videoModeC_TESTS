@@ -5,20 +5,29 @@
 	"soundkernel"       : "cores/soundMode_A/soundMode_A.js",
 
 	"js_files": [
-		"js/gs_MAIN.js" ,
-		"js/gs_TEMPLATE.js"
+		{ "type":"js"  , "location":"js/gs_MAIN.js"     } ,
+		{ "type":"js"  , "location":"js/gs_TEMPLATE.js" }
 	],
 
 	"debug_files": [
-		"DEBUG/debug.css",
-		"DEBUG/debug.js",
-		"DEBUG/debug.html"
+		{ "type":"css" , "location":"DEBUG/debug.css"  } ,
+		{ "type":"js"  , "location":"DEBUG/debug.js"   } ,
+		{ "type":"html", "location":"DEBUG/debug.html" }
+	],
+
+	"game_files" : [
+		{ "type":"text", "location":"README.md" } ,
+		{ "type":"text", "location":"LICENSE"   }
 	],
 
 	"links":[
 		{ "text":"Instructions (game)", "href":"links/instructions.txt"                               , "target":"_blank" },
 		{ "text":"Credits (game)"     , "href":"links/credits.txt"                                    , "target":"_blank" },
 		{ "text":"Github (game)"      , "href":"https://github.com/nicksen782/JSGAME_videoModeC_TESTS", "target":"_blank" }
+	],
+
+	"authors":[
+		{ "author_name": "Nickolas Andersen", "author_handle":"nicksen782", "role":"ALL", "show":false }
 	],
 
 	"mp3_files": [
@@ -61,7 +70,7 @@
 	},
 
 	"typeGamepads"      : "snes" ,
-	"numGamepads"       : 1     ,
+	"numGamepads"       : 1      ,
 
 	"graphics":{
 		"core":{

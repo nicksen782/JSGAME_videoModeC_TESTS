@@ -1,3 +1,7 @@
+// ==============================
+// ==== FILE START: debug.js ====
+// ==============================
+
 'use strict';
 
 game.DEBUG       = {} ;
@@ -7,17 +11,14 @@ game.DEBUG.TESTS = {} ;
 game.DEBUG.NAV   = {} ;
 
 //
-game.DEBUG.init = function(){
+game.DEBUG.init                     = function(){
 	// DEBUG DOM CACHE
 	game.DEBUG.DOM.DEBUG_DIV      = document.getElementById("DEBUG_DIV");
 	game.DEBUG.DOM.debug_mode_chk = document.getElementById("debug_mode");
 
 	// Set flags and counters.
 	game.DEBUG.VALS.lastDebugDisplay=performance.now();  //
-	game.DEBUG.VALS.secondsToWait_debugDisplay = 0.5; // 1 equals 1 second.
-	// game.DEBUG.VALS.secondsToWait_debugDisplay = 0.25; // 1 equals 1 second.
-	// game.DEBUG.VALS.secondsToWait_debugDisplay = JSGAME.SHARED.timing.interval * (core.SETTINGS.FPS); // 1 equals 1 second.
-	// game.DEBUG.VALS.secondsToWait_debugDisplay = (core.SETTINGS.FPS) / JSGAME.SHARED.timing.interval ; // 1 equals 1 second.
+	game.DEBUG.VALS.secondsToWait_debugDisplay = 0.5; // 1.0 equals 1 second.
 
 	// *** Show the debug div. ***
 
@@ -51,7 +52,7 @@ game.DEBUG.init = function(){
 	game.DEBUG.DOM.DEBUG_MENU_DIV_0   = document.getElementById("DEBUG_MENU_DIV_0");
 
 	// CORE
-	game.DEBUG.DOM.DEBUG_MENU_DIV_1  = document.getElementById("DEBUG_MENU_DIV_1");
+	game.DEBUG.DOM.DEBUG_MENU_DIV_1   = document.getElementById("DEBUG_MENU_DIV_1");
 	game.DEBUG.DOM.DEBUG_setToUpdate  = document.getElementById("DEBUG_setToUpdate");
 	game.DEBUG.DOM.DEBUG_forceRedraws = document.getElementById("DEBUG_forceRedraws");
 
@@ -75,8 +76,8 @@ game.DEBUG.init = function(){
 		game.DEBUG.DOM.DEBUG_setToUpdate.appendChild(span);
 
 		// For each layer:
-		for(let c=0; c<core.SETTINGS.layerDrawOrder.length; c+=1){
-			let layerName = core.SETTINGS.layerDrawOrder[c]    ;
+		for(let c=0; c<_CS.layerDrawOrder.length; c+=1){
+			let layerName = _CS.layerDrawOrder[c]    ;
 			let button = document.createElement("button");
 			button.innerText="(" + layerName + ")";
 			button.onclick=function(){ game.DEBUG.forceUpdate(layerName); };
@@ -93,8 +94,8 @@ game.DEBUG.init = function(){
 		game.DEBUG.DOM.DEBUG_forceRedraws.appendChild(span);
 
 		// For each layer:
-		for(let c=0; c<core.SETTINGS.layerDrawOrder.length; c+=1){
-			let layerName = core.SETTINGS.layerDrawOrder[c]    ;
+		for(let c=0; c<_CS.layerDrawOrder.length; c+=1){
+			let layerName = _CS.layerDrawOrder[c]    ;
 			let button = document.createElement("button");
 			button.innerText="(" + layerName + ")";
 			button.onclick=function(){ game.DEBUG.forceRedraw(layerName); };
@@ -116,7 +117,7 @@ game.DEBUG.init = function(){
 // *** DEBUG NAVIGATION MENU ***
 
 // Show a clicked panel.
-game.DEBUG.NAV.debug_showPanel  = function(panel_id, elem){
+game.DEBUG.NAV.debug_showPanel      = function(panel_id, elem){
 	// Attempt to get a DOM handle to the specified panel.
 	let specifiedPanel = document.getElementById(panel_id);
 
@@ -137,7 +138,7 @@ game.DEBUG.NAV.debug_showPanel  = function(panel_id, elem){
 	}
 };
 // Hide all panels.
-game.DEBUG.NAV.debug_hidePanels = function(){
+game.DEBUG.NAV.debug_hidePanels     = function(){
 	// Hide panels.
 	let panels = document.querySelectorAll('.DEBUG_DIV_MENU_DIVS');
 	for(let i=0; i<panels.length; i+=1){
@@ -155,13 +156,15 @@ game.DEBUG.NAV.debug_hidePanels = function(){
 
 // *** DEBUG DISPLAY UPDATES ***
 
-game.DEBUG.forceUpdate = function(layer){
+game.DEBUG.forceUpdate              = function(layer){
+	// Set the UPDATE flag for the specified layer.
 	core.GRAPHICS.DATA.FLAGS[layer].UPDATE=true;
 };
-game.DEBUG.forceRedraw = function(layer){
-	let VRAM      = core.GRAPHICS.DATA.VRAM[layer]         ;
-	for(let i in VRAM){ VRAM[i].drawThis=true; }
+game.DEBUG.forceRedraw              = function(layer){
+	// let VRAM      = core.GRAPHICS.DATA.VRAM[layer] ;
+	// for(let i in VRAM){ VRAM[i].drawThis=true; }
 
+	// Set the REDRAW flag for this layer.
 	core.GRAPHICS.DATA.FLAGS[layer].REDRAW=true;
 };
 
@@ -169,26 +172,25 @@ game.DEBUG.forceRedraw = function(layer){
 game.DEBUG.updateDebugDisplay_funcs = {
 	layerDataInfo_init:false,
 	layerDataInfo_data:{
+		"gameloop_timings" : { "displayThis":true, "r":null, "l":null, "d":null, "i":""          } , // Full measurement of the game loop (logic, draw, etc.)
+		"logic_timings"    : { "displayThis":true, "r":null, "l":null, "d":null, "i":"  -> "     } , // Measurement of specifically the logic_timings of the gameloop.
+		"gfx_timings"      : { "displayThis":true, "r":null, "l":null, "d":null, "i":"  -> "     } , // Full measurement of graphics updates.
 
-		"gameloop_timings" :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } , // Full measurement of the game loop (logic, draw, etc.)
-		"logic_timings"    :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"  -> "  } , // Measurement of specifically the logic_timings of the gameloop.
-		"gfx_timings"      :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"  -> "  } , // Full measurement of graphics updates.
+		"update_layers"    : { "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "   } , // Measurement of time for all layers.
 
-		"update_layers"    :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "} , // Measurement of time for all layers.
+		"layer_BG1"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> " } , // Measurement of time for all layers.
+		"layer_BG2"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> " } , // Measurement of time for all layers.
+		"layer_TEXT"       : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> " } , // Measurement of time for all layers.
+		"layer_SP1"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> " } , // Measurement of time for all layers.
 
-		"layer_BG1"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> "} , // Measurement of time for all layers.
-		"layer_BG2"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> "} , // Measurement of time for all layers.
-		"layer_TEXT"       : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> "} , // Measurement of time for all layers.
-		"layer_SP1"        : { "displayThis":true, "r":null, "l":null, "d":null, "i":"      -> "} , // Measurement of time for all layers.
+		"layer_combines"   : { "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "   } , // Measurement of the layer combine time.
+		"fade_timings"     : { "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "   } , // Measurement of the fade time.
+		"output_timings"   : { "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "   } , // Measurement of the final graphics output time.
 
-		"layer_combines"   :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "} , // Measurement of the layer combine time.
-		"fade_timings"     :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "} , // Measurement of the fade time.
-		"output_timings"   :{ "displayThis":true, "r":null, "l":null, "d":null, "i":"    -> "} , // Measurement of the final graphics output time.
-
-		"topbar1"          :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } , //
-		"topbar2"          :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } , //
-		"debug_timings"    :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } ,  // Measurement of the debug loop (which happens when the main loop does not run.)
-		"doColorSwapping"  :{ "displayThis":true, "r":null, "l":null, "d":null, "i":""       } , // Measurement of web-worker-based color swapping.
+		"topbar1"          : { "displayThis":true, "r":null, "l":null, "d":null, "i":""          } , //
+		"topbar2"          : { "displayThis":true, "r":null, "l":null, "d":null, "i":""          } , //
+		"debug_timings"    : { "displayThis":true, "r":null, "l":null, "d":null, "i":""          } ,  // Measurement of the debug loop (which happens when the main loop does not run.)
+		"doColorSwapping"  : { "displayThis":true, "r":null, "l":null, "d":null, "i":""          } , // Measurement of web-worker-based color swapping.
 	},
 	layerDataInfo_keys:{},
 	//
@@ -210,28 +212,21 @@ game.DEBUG.updateDebugDisplay_funcs = {
 
 				if(!rec.displayThis){ continue; }
 
-				let div_cont = document.createElement("div");
+				let div_cont   = document.createElement("div");
 				let span_label = document.createElement("span");
 				let span_data1 = document.createElement("span");
 
-				if(key=="topbar1" || key=="topbar2"){
-					div_cont.classList.add("DEBUG_layerDataInfo_div_cont");
+				div_cont.classList.add("DEBUG_layerDataInfo_div_cont");
 
-					span_label.classList.add("DEBUG_layerDataInfo_span_label");
-					span_label.innerText=(rec.i+key).toUpperCase();
+				span_label.classList.add("DEBUG_layerDataInfo_span_label");
+				span_label.innerText=(rec.i+key).toUpperCase();
 
-					span_data1.classList.add("DEBUG_layerDataInfo_span_data1");
-					span_data1.innerText="------------------";
-				}
-				else{
-					div_cont.classList.add("DEBUG_layerDataInfo_div_cont");
+				span_data1.classList.add("DEBUG_layerDataInfo_span_data1");
 
-					span_label.classList.add("DEBUG_layerDataInfo_span_label");
-					span_label.innerText=(rec.i+key).toUpperCase();
+				// The default text differs for the topbar1 and topbar2.
+				if(key=="topbar1" || key=="topbar2"){ span_data1.innerText="------------------";      }
+				else                                { span_data1.innerText="AVG:  000.00% (000%) |>"; }
 
-					span_data1.classList.add("DEBUG_layerDataInfo_span_data1");
-					span_data1.innerText="AVG:  000.00% (000%) |>";
-				}
 				// Add DOM references to the object.
 				rec.r = div_cont;
 				rec.l = span_label;
@@ -241,8 +236,7 @@ game.DEBUG.updateDebugDisplay_funcs = {
 				// Add the rows.
 				div_cont.appendChild(span_label);
 				div_cont.appendChild(span_data1);
-				frag.appendChild(div_cont);
-
+				frag    .appendChild(div_cont);
 			}
 			game.DEBUG.updateDebugDisplay_funcs.layerDataInfo_init=true;
 
@@ -268,9 +262,9 @@ game.DEBUG.updateDebugDisplay_funcs = {
 				// let topBarStatus = document.getElementById("debug_updateIndicator5");
 				if     (key=="topbar1"){
 					let str = "" +
-						("(I"    + ": " + ((game.DEBUG.lastloopTimings.interval).toFixed(2) + "ms"+") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						("(I"        + ": " + ((game.DEBUG.lastloopTimings.interval).toFixed(2) + "ms"+") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
 						("(BETWEEN"  + ": " + ((game.DEBUG.lastloopTimings.time    ).toFixed(2) + "ms"+") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
-						("(P"    + ": " + ((game.DEBUG.lastloopTimings.percent ).toFixed(2) + "%" +") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
+						("(P"        + ": " + ((game.DEBUG.lastloopTimings.percent ).toFixed(2) + "%" +") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
 						// ("(CFPS" + ": " + ((game.DEBUG.lastloopTimings.calcFPS ).toFixed(2) + ""  +") " ).padStart(1, " ")).padEnd(1, " ") + ", " +
 						// ("(SFPS" + ": " + ((game.DEBUG.lastloopTimings.setFPS  ).toFixed(2) + ""  +") " ).padStart(1, " ")).padEnd(1, " ") + "  " +
 						""
@@ -370,14 +364,14 @@ game.DEBUG.updateDebugDisplay_funcs = {
 };
 
 // Visual showing the layers split up.
-game.DEBUG.showIndividualLayers = function(){
+game.DEBUG.showIndividualLayers     = function(){
 	let elem = document.getElementById("DEBUG_LAYERS_table1");
 
 	if(elem.getAttribute("init")=="false"){
 		let div = document.createElement("div");
 
-		for(let c=0; c<core.SETTINGS.layerDrawOrder.length; c+=1){
-			let layerName = core.SETTINGS.layerDrawOrder[c] ;
+		for(let c=0; c<_CS.layerDrawOrder.length; c+=1){
+			let layerName = _CS.layerDrawOrder[c] ;
 			let canvas    = core.GRAPHICS.canvas[layerName] ;
 			// let ctx       = core.GRAPHICS.ctx[layerName] ;
 			let VRAM_len;
@@ -481,7 +475,7 @@ game.DEBUG.showIndividualLayers = function(){
 };
 
 //
-game.DEBUG.showColorOnHover     = {
+game.DEBUG.showColorOnHover         = {
 	hasListeners : false,
 	colorTableDrawn : false,
 
@@ -683,8 +677,8 @@ game.DEBUG.showColorOnHover     = {
 					let canvas=document.createElement("canvas");
 					canvas.classList.add("debug_colorOutput_tile_canvases");
 					canvas.setAttribute("title", "RGB HEX: " + key + ", uze_hex: "+ uze_hex);
-					canvas.width  = core.SETTINGS.TILE_WIDTH;
-					canvas.height = core.SETTINGS.TILE_HEIGHT;
+					canvas.width  = _CS.TILE_WIDTH;
+					canvas.height = _CS.TILE_HEIGHT;
 					let ctx=canvas.getContext("2d");
 					ctx.fillStyle = key;
 					ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -741,7 +735,7 @@ game.DEBUG.showColorOnHover     = {
 };
 
 // Called periodically to update the displayed debug information.
-game.DEBUG.updateDebugDisplay = function(){
+game.DEBUG.updateDebugDisplay       = function(){
 	// PERFORMANCE DISPLAY (AVG TIMINGS)
 	game.DEBUG.updateDebugDisplay_funcs.layerDataInfo();
 
@@ -831,7 +825,7 @@ game.DEBUG.updateDebugDisplay = function(){
 };
 
 //
-game.DEBUG.shakeTest = function(){
+game.DEBUG.shakeTest                = function(){
 	let list = [
 
 		[0,0], [+2,+2], [+1,+1], [0,0], [-1,-1], [-2,-2], [0,0],
@@ -860,3 +854,7 @@ game.DEBUG.shakeTest = function(){
 	// }
 };
 // *** GAME-SPECIFIC DEBUG TESTS ***
+
+// ============================
+// ==== FILE END: debug.js ====
+// ============================

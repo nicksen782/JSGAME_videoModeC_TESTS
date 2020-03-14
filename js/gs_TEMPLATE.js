@@ -1,3 +1,7 @@
+// ====================================
+// ==== FILE START: gs_TEMPLATE.js ====
+// ====================================
+
 'use strict';
 
 /*
@@ -1070,7 +1074,7 @@ game.gs.TESTS1 = {
 
 				],
 				"tileset"     : "tilesSP1",
-				"layer"       : "TEXT",
+				"layer"       : "SP1",
 				"flags"       : {
 					"ROT":0, "FLIP_X":false, "FLIP_Y":false, "spriteIndex":undefined, "OFF":false,
 					"colorSwaps":[
@@ -1087,6 +1091,15 @@ game.gs.TESTS1 = {
 				"curFrame"    : 0,
 			},
 		};
+		for(let key in vars.animations3._data){
+			let data        = vars.animations3._data[key] ;
+			let active      = data.active                ;
+			let anim        = vars.animations3[key]       ;
+			if(!active){ continue; }
+			let flags       = anim.flags       ;
+			flags.spriteIndex=i;
+			i+=1;
+		}
 
 		// console.log("last i:", i);
 		vars.END = false;
@@ -1098,8 +1111,8 @@ game.gs.TESTS1 = {
 		let vars  = gs.vars;
 
 		// Highlight under top stick figure animations.
-		_CGFU.TileFill(4, 0, 23, 5, "tilesBG1", 2        , "BG2" , {}   );
-		_CGFU.TileFill(4, 6, 23, 5, "tilesBG1", 2        , "BG2" , {}   );
+		_CGFU.TileFill(4, 0, 23, 5, "tilesBG1", 2        , "BG1" , {}   );
+		_CGFU.TileFill(4, 6, 23, 5, "tilesBG1", 3        , "BG2" , {}   );
 	},
 	//
 	main : function(){
@@ -1308,3 +1321,7 @@ game.gs.TESTS1 = {
 
 /*
 */
+
+// ==================================
+// ==== FILE END: gs_TEMPLATE.js ====
+// ==================================

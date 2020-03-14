@@ -1,3 +1,7 @@
+// ================================
+// ==== FILE START: gs_MAIN.js ====
+// ================================
+
 'use strict';
 
 // *** SHARED GAME VARIABLES ***
@@ -161,7 +165,7 @@ game.firstLoop = function(){
 		// *** TIMING ***
 
 		// https://codetheory.in/controlling-the-frame-rate-with-requestanimationframe/
-		JSGAME.SHARED.timing.adjust( core.SETTINGS.fps );
+		JSGAME.SHARED.timing.adjust( _CS.fps );
 
 		// *** VRAM ***
 
@@ -171,10 +175,10 @@ game.firstLoop = function(){
 		core.FUNCS.audio.changeMasterVolume(75);
 
 		// Set the volume:
-		if( JSGAME.PRELOAD.PHP_VARS.queryString.mastervol != undefined)       {
+		if( JSGAME.PRELOAD.PHP_VARS.mastervol != undefined)       {
 			// Set the volume (within range.)
-			if( !isNaN( JSGAME.PRELOAD.PHP_VARS.queryString.mastervol ) ){
-				core.FUNCS.audio.changeMasterVolume( Math.min(Math.max(JSGAME.PRELOAD.PHP_VARS.queryString.mastervol, 0), 100) );
+			if( !isNaN( JSGAME.PRELOAD.PHP_VARS.mastervol ) ){
+				core.FUNCS.audio.changeMasterVolume( Math.min(Math.max(JSGAME.PRELOAD.PHP_VARS.mastervol, 0), 100) );
 			}
 		}
 
@@ -191,7 +195,7 @@ game.firstLoop = function(){
 
 		if(JSGAME.FLAGS.debug){
 			// document.getElementById("debug_updateIndicator2").innerText = (JSGAME.SHARED.timing.interval.toFixed(2)) + " ms/frame";
-			// document.getElementById("debug_updateIndicator3").innerText = "SET FPS: " + (core.SETTINGS.FPS) + " FPS";
+			// document.getElementById("debug_updateIndicator3").innerText = "SET FPS: " + (_CS.FPS) + " FPS";
 		}
 
 		// Resolve this since we are done.
@@ -344,7 +348,7 @@ game.loop = function(){
 		// GRAPHICS RENDER
 		// ***************
 
-		try{ await _CGFU.renderOutput(); } catch(e){ _CGFI.errorHandler("renderOutput", e); }
+		try{ await _CGFU.renderOutput(); } catch(err){ _CGFI.errorHandler("renderOutput", err); }
 
 		// *****
 		// LOGIC
@@ -363,11 +367,12 @@ game.loop = function(){
 		// ***************
 
 		// Layer updates.
-		try{ await _CGFI.update_layers(); } catch(e){ _CGFI.errorHandler("update_layers", e); }
+		try{ await _CGFI.update_layers(); } catch(err){ _CGFI.errorHandler("update_layers", err); }
 
 		core.GRAPHICS.DEBUG.end("logic_timings"   );
 		core.GRAPHICS.DEBUG.end("gameloop_timings");
 
+		//
 		res_loop();
 
 		// **** **** ****
@@ -390,7 +395,7 @@ game.gameloop = async function(timestamp){
 		game.DEBUG.lastloopTimings.time     = timestamp - JSGAME.SHARED.timing._then                                    ;
 		game.DEBUG.lastloopTimings.percent  = ((game.DEBUG.lastloopTimings.time) / JSGAME.SHARED.timing.interval) * 100 ;
 		game.DEBUG.lastloopTimings.calcFPS  = JSGAME.SHARED.fps.value                                                   ;
-		game.DEBUG.lastloopTimings.setFPS   = core.SETTINGS.FPS;
+		game.DEBUG.lastloopTimings.setFPS   = _CS.FPS;
 	}
 
 	// Update the timing values.
@@ -401,7 +406,9 @@ game.gameloop = async function(timestamp){
 	// Ready to run a graphics/logic update?
 	let is_deltaOverInterval = (JSGAME.SHARED.timing.delta >= JSGAME.SHARED.timing.interval ? true : false) ;
 	let is_paused            = !(JSGAME.FLAGS.gameReady && JSGAME.FLAGS.windowIsFocused && ! JSGAME.FLAGS.paused && ! JSGAME.FLAGS.manuallyPaused) ;
+	let ms_untilNextScheduledLoop = JSGAME.SHARED.timing.nextFrameTime - JSGAME.SHARED.timing.now;
 
+	// Ready for the next game loop?
 	if(is_deltaOverInterval) {
 		// Update the timing data.
 		JSGAME.SHARED.timing._then = JSGAME.SHARED.timing.now - (JSGAME.SHARED.timing.delta % JSGAME.SHARED.timing.interval);
@@ -445,32 +452,50 @@ game.gameloop = async function(timestamp){
 
 	// Not ready yet. Do something else.
 	else{
+		// Must have debug on, allowDebugToRun.
 		if(JSGAME.FLAGS.debug && JSGAME.FLAGS.allowDebugToRun){
-			// Control how often the debug display is updated.
-			// NOTE: Time includes the last frame drawn.
-			let last                       = game.DEBUG.VALS.lastDebugDisplay           ;
-			let timeSince                  = performance.now() - last                   ;
-			let secondsToWait_debugDisplay = game.DEBUG.VALS.secondsToWait_debugDisplay ;
+			// The timing delta should be over 10ms since the debug typically runs 6-10ms.
+			if(JSGAME.SHARED.timing.delta > 10){
+				// console.log(
+				// 	"ms_untilNextScheduledLoop:"  , ms_untilNextScheduledLoop,
+				// 	"is_deltaOverInterval:"       , is_deltaOverInterval,
+				// 	"JSGAME.SHARED.timing.delta:" , JSGAME.SHARED.timing.delta
+				// );
 
-			// Update the debug display?
+				// Control how often the debug display is updated.
+				// NOTE: Time includes the last frame drawn.
+				let last                       = game.DEBUG.VALS.lastDebugDisplay           ;
+				let timeSince                  = performance.now() - last                   ;
+				let secondsToWait_debugDisplay = game.DEBUG.VALS.secondsToWait_debugDisplay ;
 
-			// Update based on the specified timing.
-			if( timeSince >= (JSGAME.SHARED.timing.interval * core.SETTINGS.fps) * secondsToWait_debugDisplay ){
-				core.GRAPHICS.DEBUG.start("debug_timings");
+				// Update the debug display?
 
-				// Run the debug display.
-				game.DEBUG.updateDebugDisplay();
-				game.DEBUG.VALS.lastDebugDisplay=performance.now();
+				// Update based on the specified timing.
+				if( timeSince >= (JSGAME.SHARED.timing.interval * _CS.fps) * secondsToWait_debugDisplay ){
+					core.GRAPHICS.DEBUG.start("debug_timings");
 
-				// Clear allowDebugToRun. It will be set again after graphicsUpdate completes.
-				JSGAME.FLAGS.allowDebugToRun=false;
+					// Run the debug display.
+					game.DEBUG.updateDebugDisplay();
+					game.DEBUG.VALS.lastDebugDisplay=performance.now();
 
-				core.GRAPHICS.DEBUG.end("debug_timings");
+					// Clear allowDebugToRun. It will be set again after graphicsUpdate completes.
+					JSGAME.FLAGS.allowDebugToRun=false;
+
+					core.GRAPHICS.DEBUG.end("debug_timings");
+
+					// Schedule the next game.gameloop.
+					JSGAME.SHARED.schedule_gameloop();
+				}
+				else{
+					// Schedule the next game.gameloop.
+					JSGAME.SHARED.schedule_gameloop();
+				}
+
 			}
-
-
-			// Schedule the next game.gameloop.
-			JSGAME.SHARED.schedule_gameloop();
+			else{
+				// Schedule the next game.gameloop.
+				JSGAME.SHARED.schedule_gameloop();
+			}
 		}
 		else{
 			// Schedule the next game.gameloop.
@@ -490,3 +515,7 @@ game.gameloop = async function(timestamp){
 
 	draw.
 */
+
+// ==============================
+// ==== FILE END: gs_MAIN.js ====
+// ==============================
