@@ -1,23 +1,49 @@
 {
+	/*
+	"__INSTRUCTIONS__" : [
+		"filelist"
+			"The 'filelist' key can take 3 options for 'deliverAs'." ,
+			" 'xhr'        : File will be retrieved by the front-end." ,
+			" 'text'       : File will be included with init and added by the front-end later as an individual blob. " ,
+			" 'base64'     : File will be included with init and base64 encoded. (needed for binaries.)" ,
+			" 'combinedjs' : Files will be combined and included with init and added by the front-end later as one blob." ,
+			"" ,
+			"NOTE : If a file is loaded as a blob AND it has source-maps then you will see the original data in the dev console." ,
+			"NOTE : If 'deliverAs' is set to 'xhr', and type is 'js' and debug is NOT on then it will become 'combinedjs' instead."
+
+		"INTRO_LOGO"
+			1 allows the JSGAME logo to appear.
+			0 prevents the JSGAME logo from appearing.
+			NOTE: If set to 1 and DEBUG is set then the display time will be much shorter.
+
+		"mp3_files"
+			Any mp3 files should be in filelist.
+			However, this key must still be populated because it supplies additional data.
+			Can be used as a backup if the file data in filelist is wrong.
+		"midi_bin"
+			This should be in the filelist.
+			This key is optional.
+			Can be used as a backup if the file data in filelist is wrong.
+	],
+	*/
+
 	"custom_videokernel" : false,
 	"custom_soundkernel" : false,
 	"videokernel"       : "cores/videoMode_C/videoMode_C.js",
 	"soundkernel"       : "cores/soundMode_A/soundMode_A.js",
 
-	"js_files": [
-		{ "type":"js"  , "location":"js/gs_MAIN.js"     } ,
-		{ "type":"js"  , "location":"js/gs_TEMPLATE.js" }
-	],
+	"filelist":[
+		{ "key":"gfx_files"  , "deliverAs":"text"  , "type":"inc"     , "location":"UAM/PROGMEM/tiles.min.inc" } ,
 
-	"debug_files": [
-		{ "type":"css" , "location":"DEBUG/debug.css"  } ,
-		{ "type":"js"  , "location":"DEBUG/debug.js"   } ,
-		{ "type":"html", "location":"DEBUG/debug.html" }
-	],
+		{ "key":"mp3_files"  , "deliverAs":"base64", "type":"mp3"     , "location":"snd/tick.mp3"      }  ,
+		{ "key":"midi_bin"   , "deliverAs":"base64", "type":"midi_bin", "location":"UAM/MUSIC/videoModeC_TESTS_midi.bin" } ,
 
-	"game_files" : [
-		{ "type":"text", "location":"README.md" } ,
-		{ "type":"text", "location":"LICENSE"   }
+		{ "key":"debug_files", "deliverAs":"xhr"   , "type":"css"     , "location":"DEBUG/debug.css"   } ,
+		{ "key":"debug_files", "deliverAs":"text"  , "type":"html"    , "location":"DEBUG/debug.html"  } ,
+		{ "key":"debug_files", "deliverAs":"xhr"   , "type":"js"      , "location":"DEBUG/debug.js"    } ,
+
+		{ "key":"js_files"   , "deliverAs":"xhr"   , "type":"js"      , "location":"js/gs_MAIN.js"     } ,
+		{ "key":"js_files"   , "deliverAs":"xhr"   , "type":"js"      , "location":"js/gs_TEMPLATE.js" }
 	],
 
 	"links":[

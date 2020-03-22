@@ -6,9 +6,6 @@
 
 // *** SHARED GAME VARIABLES ***
 
-// Will hold each individual game state.
-game.gs = {};
-
 // Holds data/functions that is intended for sharing between gamestates.
 game.SHARED = {
 	// *** SHARED FUNCTIONS ***
